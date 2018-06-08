@@ -143,10 +143,18 @@ class guess(object):
     def answeridiom(self):
         
         answer = self.getSlots('sys.idiom')
-        if answer ==  self.imageurl[self.number][0]:
+        if not answer:
+            self.nlu.ask('sys.idiom')
+            card = TextCard('答案是什么呢')
             return {
-                'outputSpeech': '恭喜您答对了，你真棒，再来一道呗',
-                'outputSpeech': '<speak>你真聪明，答对了，再来一道呗</speak>'
+                'card': card,
+                'outputSpeech': '答案是什么呢？',
+                'outputSpeech': '<speak>答案是什么呢？</speak>'
+            }
+        elif answer ==  self.imageurl[self.number][0]:
+            return {
+                'outputSpeech': '恭喜您答对了，你真棒！再来一道呗',
+                'outputSpeech': '<speak>答对了！你真聪明！再来一道吧</speak>'
             }
         else:
             return {

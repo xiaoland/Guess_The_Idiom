@@ -27,7 +27,7 @@ class guess(Bot):
         self.answeridiom = self.g.answeridiom()
         self.idiom = self.g.idiom() 
         self.welcome = self.g.welcome()
-        self.number = random.random(0:67)
+        self.number = random.randint0:67)
         super(Bot, self).__init__(data)
         self.addLaunchHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)

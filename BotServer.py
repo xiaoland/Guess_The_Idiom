@@ -10,7 +10,7 @@
 """
 from cgi import parse_qs, escape
 import json
-from dueros.samples.Bot import Bot
+from dueros.samples.skills import guess
 
 def application(environ, start_response):
     try:
@@ -22,7 +22,7 @@ def application(environ, start_response):
     if not request_body:
         return ['未获取到请求数据']
 
-    bot = Bot(request_body)
+    bot = guess(request_body)
     #添加错误回调方法
     bot.setCallBack(callback)
 

@@ -2,9 +2,6 @@
 
 import os
 import sys
-import urllib
-import urllib2
-import httplib
 import requests
 import random
 from dueros.Bot import Bot

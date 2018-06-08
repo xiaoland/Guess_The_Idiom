@@ -21,10 +21,10 @@ class guess(Bot):
     
     def __init__(self, data):
         
-        self.g = guess() 
         self.addIntentHandler = bot.addIntentHandler()
         self.number = random.randint(0,67)
         super(Bot, self).__init__(data)
+        self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('idiom_answer', self.answeridiom)
@@ -99,7 +99,13 @@ class guess(Bot):
             ['人面兽心', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%BA%BA%E9%9D%A2%E5%85%BD%E5%BF%83.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F4db4435ac3b284a432c9db8bee06cac1add29065fbd3f8bf61f1ffa2326aa0ef'],
             ['三人成虎', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%B8%89%E4%BA%BA%E6%88%90%E8%99%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F0602fbaf21a33c96a42870fed3e2042c9f157292e48091392dd52943efca6d42']
         ]
+    def launchRequest(self):
         
+        return {
+            'card': TextCard(r'说出“开始猜成语”即可开始看图猜成语'),
+            'outputSpeech': r'<speak>来啊，猜成语啊，说出“开始猜成语”即可开始看图猜成语</speak>'
+        }
+    
     def idiom(self):
         
         

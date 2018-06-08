@@ -9,16 +9,16 @@ import urllib2
 import httplib
 import requests
 import random
-from Bot import Bot as bot
+from dueros.Bot import Bot
 sys.path.append('./card/')
-from ImageCard import ImageCard as ImageCard
-from ListCard import ListCard as ListCard
-from ListCardItem import ListCardItem as ListCardItem
-from StandardCard import StandardCard as StandardCard
-from TextCard import TextCard as TextCard
+from dueros.card.ImageCard import ImageCard as ImageCard
+from dueros.card.ListCard import ListCard as ListCard
+from dueros.card.ListCardItem import ListCardItem as ListCardItem
+from dueros.card.StandardCard import StandardCard as StandardCard
+from dueros.card.TextCard import TextCard as TextCard
 
 
-class guess(object):
+class guess(Bot):
     
     def __init__(self):
         

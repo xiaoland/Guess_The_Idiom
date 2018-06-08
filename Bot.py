@@ -10,23 +10,19 @@ import httplib
 import requests
 import random
 from dueros.Bot import Bot
-sys.path.append('./card/')
-from dueros.card.ImageCard import ImageCard as ImageCard
-from dueros.card.ListCard import ListCard as ListCard
-from dueros.card.ListCardItem import ListCardItem as ListCardItem
-from dueros.card.StandardCard import StandardCard as StandardCard
-from dueros.card.TextCard import TextCard as TextCard
+from dueros.card.ImageCard import ImageCard 
+from dueros.card.ListCard import ListCard
+from dueros.card.ListCardItem import ListCardItem
+from dueros.card.StandardCard import StandardCard
+from dueros.card.TextCard import TextCard
 
 
 class guess(Bot):
     
-    def __init__(self):
+    def __init__(self, data):
         
         self.g = guess() 
         self.addIntentHandler = bot.addIntentHandler()
-        self.answeridiom = self.g.answeridiom()
-        self.idiom = self.g.idiom() 
-        self.welcome = self.g.welcome()
         self.number = random.randint(0,67)
         super(Bot, self).__init__(data)
         self.addLaunchHandler('welcome', self.welcome)
@@ -109,10 +105,8 @@ class guess(Bot):
         
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1], self.imageurl[self.number][1])
-        card.addCueWords（[
-                           '小度小度，我觉得答案是......',
-                           '小度小度，我认为答案是......'
-                         ])
+        card.addCueWords('小度小度，我觉得答案是......')
+        card.addCueWords('小度小度，我认为答案是......')
         return {
             'card': card,
         }
@@ -121,18 +115,14 @@ class guess(Bot):
         
         card = StandardCard()
         card.setTitle('看图猜成语引导')
-        card.setContent([
-                         '看图猜成语引导',
-                         '说出我想猜成语即可开始看图猜成语',
-                         '想出答案以后：',
-                         '说出：“我认为答案是......”或者“我觉得答案是......”'
-                       ])
-        card.addCueWords([
-                         '小度小度，我想猜成语',
-                         '小度小度，我喜欢猜成语',
-                         '小度小度，看图猜成语',
-                         '小度小度，我要猜成语'
-                        ])
+        card.setContent('看图猜成语引导')
+        card.setContent('说出我想猜成语即可开始看图猜成语')
+        card.setContent('想出答案以后：')
+        card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
+        card.addCueWords('小度小度，我想猜成语')
+        card.addCueWords('小度小度，我喜欢猜成语')
+        card.addCueWords('小度小度，看图猜成语')
+        card.addCueWords('小度小度，我要猜成语')
         return {
             'card': card
         }
@@ -141,22 +131,30 @@ class guess(Bot):
     def answeridiom(self):
         
         answer = self.getSlots('sys.idiom')
+        card = ImageCard()
+        card.addItem(self.imageurl[self.number][1], self.imageurl[self.number][1])
+        card.addCueWords('小度小度，我觉得答案是......')
+        card.addCueWords('小度小度，我认为答案是......')
         if not answer:
             self.nlu.ask('sys.idiom')
-            card = TextCard('答案是什么呢')
+            tcard = TextCard('答案是什么呢')
             return {
-                'card': card,
-                'outputSpeech': '答案是什么呢？',
-                'outputSpeech': '<speak>答案是什么呢？</speak>'
+                'card': tcard,
+                'outputSpeech': '答案是什么呢？'
             }
         elif answer ==  self.imageurl[self.number][0]:
+            
             return {
-                'outputSpeech': '恭喜您答对了，你真棒！再来一道呗',
-                'outputSpeech': '<speak>答对了！你真聪明！再来一道吧</speak>'
+                'outputSpeech': '恭喜你答对了，你真棒！再来一道呗',
+                'card': card
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[self.number][0] + '不要气馁，再来一道,
-                'outputSpeech': '<speak>' + '好遗憾，答错了，正确答案是：' + self.imageurl[self.number][0] + '不要气馁，再来一道' + '</speak>'
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[self.number][0] + '不要气馁，再来一道',
+                'card': card
             }
+    
+if __name__ == '__main__':
+    
+    pass
     

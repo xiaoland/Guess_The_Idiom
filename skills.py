@@ -2,8 +2,6 @@
 
 import os
 import sys
-import json
-import demjson
 import urllib
 import urllib2
 import httplib

@@ -20,7 +20,7 @@ class guess(Bot):
         self.addIntentHandler = bot.addIntentHandler()
         self.number = random.randint(0,67)
         super(Bot, self).__init__(data)
-        self.addLaunchHandler('welcome', self.welcome)
+        self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.imageurl = [

@@ -28,6 +28,10 @@ class guess(Bot):
         self.idiom = self.g.idiom() 
         self.welcome = self.g.welcome()
         self.number = random(0:67)
+        super(Bot, self).__init__(data)
+        self.addLaunchHandler('welcome', self.welcome)
+        self.addIntentHandler('idiom', self.idiom)
+        self.addIntentHandler('idiom_answer', self.answeridiom)
         self.imageurl = [
             ['支离破碎': 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E6%94%AF%E7%A6%BB%E7%A0%B4%E7%A2%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-02T05%3A40%3A12Z%2F-1%2F%2Ffe3796074d45a645faac8f230a2b5890e8a7dfcd370862dc3acb416e2c05ab26'],
             ['重蹈复辙': 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E9%87%8D%E8%B9%88%E5%A4%8D%E8%BE%99.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-02T05%3A40%3A11Z%2F-1%2F%2F30b90339f52f9b742a19f8b013cb034bfe6cd03077daae2b0efbe08049811850'],
@@ -99,12 +103,6 @@ class guess(Bot):
             ['人面兽心': 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%BA%BA%E9%9D%A2%E5%85%BD%E5%BF%83.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F4db4435ac3b284a432c9db8bee06cac1add29065fbd3f8bf61f1ffa2326aa0ef'],
             ['三人成虎': 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%B8%89%E4%BA%BA%E6%88%90%E8%99%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F0602fbaf21a33c96a42870fed3e2042c9f157292e48091392dd52943efca6d42']
         ]
-    
-    def main(self):
-        
-        self.addIntentHandler('idiom', self.idiom)
-        self.addIntentHandler('idiom_answer', self.answeridiom)
-        self.addIntentHandler('welcome', self.welcome)
         
     def idiom(self):
         

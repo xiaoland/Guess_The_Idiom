@@ -10,7 +10,7 @@
 """
 from cgi import parse_qs, escape
 import json
-from dueros.samples.skills import guess
+from dueros.duerskills.skills import guess
 
 def application(environ, start_response):
     try:

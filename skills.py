@@ -134,6 +134,8 @@ class guess(Bot):
             return {
                 'card': TextCard('默认开始看图猜成语'),
                 'outputSpeech': '开始看图猜成语'
+            }
+                
     
     def idiom(self):
         

@@ -2,8 +2,8 @@
 # -*- encoding=utf-8 -*-
 
 # description:
-# author:jack
-# create_time: 2018/1/3
+# author:xiaoland
+# create_time: 2018/6/1
 
 import os
 import sys
@@ -21,7 +21,7 @@ class guess(Bot):
     
     def __init__(self, data):
         
-        super(Bot, self).__init__(data)
+        super().__init__(data)
         self.number = random.randint(0,67)
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)

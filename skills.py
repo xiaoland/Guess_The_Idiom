@@ -9,6 +9,7 @@ import os
 import sys
 import requests
 import random
+import re
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard
@@ -136,6 +137,8 @@ class guess(Bot):
     def answeridiom(self):
         
         answer = self.getSlots('sys.idiom')
+        answers = re.sub(r'\\','',answer)
+        print answers
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -147,7 +150,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': '答案是什么呢？'
             }
-        elif answer ==  self.imageurl[self.number][0]:
+        elif answers['idiom'] ==  self.imageurl[self.number][0]:
             
             return {
                 'outputSpeech': '恭喜你答对了，你真棒！再来一道呗',

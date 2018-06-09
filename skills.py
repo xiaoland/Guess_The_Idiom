@@ -132,7 +132,7 @@ class guess(Bot):
             guess.answeridiom()
         else:
             return {
-                'card': TextCard('默认开始看图猜成语')
+                'card': TextCard('默认开始看图猜成语'),
                 'outputSpeech': '开始看图猜成语'
     
     def idiom(self):

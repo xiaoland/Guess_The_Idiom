@@ -25,6 +25,7 @@ class guess(Bot):
         
         super().__init__(data)
         self.number = random.randint(0,67)
+        self.numbers = {}
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
@@ -109,7 +110,7 @@ class guess(Bot):
     
     def idiom(self):
         
-        
+        self.numbers['first'] = self.number 
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -139,9 +140,9 @@ class guess(Bot):
         
         answer = self.getSlots('sys.idiom')
         answers = re.sub(r'\\','',answer)
-        print(answers)
+        print(json.loads(answers)['idiom'])
         card = ImageCard()
-        card.addItem(self.imageurl[self.number][1])
+        card.addItem(self.imageurl[self.number['first']][1])
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，我认为答案是......')
         if not answer:
@@ -151,7 +152,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': '答案是什么呢？'
             }
-        elif json.loads(answers)['idiom'] ==  self.imageurl[self.number][0]:
+        elif json.loads(answers)['idiom'] ==  self.imageurl[self.numbers['first']][0]:
             
             return {
                 'outputSpeech': '恭喜你答对了，你真棒！再来一道呗',
@@ -159,7 +160,7 @@ class guess(Bot):
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[self.number][0] + '不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[self.number['first']][0] + '不要气馁，再来一道',
                 'card': card
             }
     

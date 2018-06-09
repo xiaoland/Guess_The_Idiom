@@ -26,7 +26,6 @@ class guess(Bot):
         super().__init__(data)
         self.data = data
         self.number = random.randint(0,67)
-        self.numbers = {}
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
@@ -121,9 +120,18 @@ class guess(Bot):
         }
         g.idiom()
     
+    def n(self, number, o):
+        
+        if o == 0:
+            numbers = {'first': number}
+            pass
+        else:
+            return numbers
+    
     def idiom(self):
         
-        self.numbers['first'] = self.number 
+        g = guess(self.data)
+        g.n(self.number, 1)
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -150,6 +158,7 @@ class guess(Bot):
     
     def answeridiom(self):
         
+        g = guess(self.data)
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -162,7 +171,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'答案是什么呢？'
             }
-        elif answer ==  self.imageurl[self.numbers['first']][0]:
+        elif answer ==  self.imageurl[g.n(1, 1)['first']]][0]:
             
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',

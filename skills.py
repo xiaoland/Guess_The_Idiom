@@ -7,6 +7,7 @@
 
 import os
 import sys
+import json
 import requests
 import random
 import re
@@ -150,7 +151,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': '答案是什么呢？'
             }
-        elif answers['idiom'] ==  self.imageurl[self.number][0]:
+        elif json.loads(answers)['idiom'] ==  self.imageurl[self.number][0]:
             
             return {
                 'outputSpeech': '恭喜你答对了，你真棒！再来一道呗',

@@ -101,8 +101,8 @@ class guess(Bot):
     def launchRequest(self):
         
         return {
-            'card': TextCard(r'说出“开始猜成语”即可开始看图猜成语'),
-            'outputSpeech': r'<speak>来啊，猜成语啊，说出“开始猜成语”即可开始看图猜成语</speak>'
+            'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
+            'outputSpeech': '来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
         }
     
     def idiom(self):

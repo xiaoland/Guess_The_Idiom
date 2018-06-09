@@ -152,7 +152,7 @@ class guess(Bot):
         
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
-        card.addItem(self.imageurl[self.numbers['first']][1])
+        card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，我认为答案是......')
         if not answer:

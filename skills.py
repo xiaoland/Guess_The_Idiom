@@ -110,15 +110,16 @@ class guess(Bot):
             'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
             'outputSpeech': '来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
         }
-        g.idiom()
+        
     
     def quesheng(self):
         
+        g = guess(self.data)
         return {
             'card': TextCard('你回答的好像不是成语哦，让我们继续看图猜成语吧'),
             'outputSpeech': '你回答的好像不是成语哦，让我们继续看图猜成语吧'
         }
-                
+        g.idiom()
     
     def idiom(self):
         

@@ -131,7 +131,7 @@ class guess(Bot):
     def idiom(self):
         
         g = guess(self.data)
-        g.n(self.number, 1)
+        g.n(self.number, 0)
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')

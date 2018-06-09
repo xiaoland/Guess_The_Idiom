@@ -27,7 +27,7 @@ class guess(Bot):
         self.data = data
         self.number = random.randint(0,67)
         self.numbers = {}
-        self.text = data['payload']['query']
+        self.text = data['event']['payload']['query']
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)

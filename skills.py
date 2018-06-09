@@ -11,7 +11,6 @@ import json
 import requests
 import random
 import re
-from dueros.duerskills.num import nu
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard
@@ -103,6 +102,7 @@ class guess(Bot):
             ['人面兽心', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%BA%BA%E9%9D%A2%E5%85%BD%E5%BF%83.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F4db4435ac3b284a432c9db8bee06cac1add29065fbd3f8bf61f1ffa2326aa0ef'],
             ['三人成虎', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E4%B8%89%E4%BA%BA%E6%88%90%E8%99%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-08T02%3A42%3A27Z%2F-1%2F%2F0602fbaf21a33c96a42870fed3e2042c9f157292e48091392dd52943efca6d42']
         ]
+        
     def launchRequest(self):
         
         g = guess(self.data)
@@ -123,8 +123,6 @@ class guess(Bot):
     
     def idiom(self):
         
-        n = nu()
-        n.numb(self.number, 0)
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -164,7 +162,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'答案是什么呢？'
             }
-        elif answer ==  self.imageurl[n.numb(1, 1)['first']][0]:
+        elif answer ==  self.answer:
             
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
@@ -172,7 +170,7 @@ class guess(Bot):
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[n.numb(1, 1)['first']][0] + '不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.answer + '不要气馁，再来一道',
                 'card': card
             }
     

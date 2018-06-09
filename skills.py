@@ -151,7 +151,7 @@ class guess(Bot):
     
     def answeridiom(self):
         
-        g = guess(self.data)
+        n = nu()
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -164,7 +164,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'答案是什么呢？'
             }
-        elif answer ==  self.imageurl[g.n(1, 1)['first']][0]:
+        elif answer ==  self.imageurl[n.numb(1, 1)['first']][0]:
             
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
@@ -172,7 +172,7 @@ class guess(Bot):
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[self.numbers['first']][0] + '不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.imageurl[n.numb(1, 1)['first']][0] + '不要气馁，再来一道',
                 'card': card
             }
     

@@ -11,6 +11,7 @@ import json
 import requests
 import random
 import re
+from dueros.duerskills.num import nu
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard
@@ -120,18 +121,10 @@ class guess(Bot):
         }
         g.idiom()
     
-    def n(self, number, o):
-        
-        if o == 0:
-            numbers = {'first': number}
-            pass
-        else:
-            return numbers
-    
     def idiom(self):
         
-        g = guess(self.data)
-        g.n(self.number, 0)
+        n = nu()
+        n.numb(self.number, 0)
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')

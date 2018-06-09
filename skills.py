@@ -21,6 +21,7 @@ class guess(Bot):
     
     def __init__(self, data):
         
+        super(Bot, self).__init__(data)
         self.number = random.randint(0,67)
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)

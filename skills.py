@@ -116,6 +116,24 @@ class guess(Bot):
         g = guess(self.data)
         if '我认为答案是' in self.text:
             guess.answeridiom()
+        elif self.text == '我认为答案是':
+            guess.answeridiom()
+        elif '我觉得答案是' in self.text:
+            guess.answeridiom()
+        elif self.text == '我觉得答案是':
+            guess.answeridiom()
+        elif '答案是' in self.text:
+            guess.answeridiom()
+        elif self.text == '答案是':
+            guess.answeridiom()
+        elif '成语的答案是' in self.text:
+            guess.answeridiom()
+        elif self.text == '成语的答案是':
+            guess.answeridiom()
+        else:
+            return {
+                'card': TextCard('默认开始看图猜成语')
+                'outputSpeech': '开始看图猜成语'
     
     def idiom(self):
         

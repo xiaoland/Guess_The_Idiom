@@ -151,8 +151,6 @@ class guess(Bot):
     def answeridiom(self):
         
         answer = self.getSlots('sys.idiom')
-        answers = re.sub(r'\\','',answer)
-        print(answers['idiom'])
         card = ImageCard()
         card.addItem(self.imageurl[self.number['first']][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -164,7 +162,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'答案是什么呢？'
             }
-        elif answers['idiom'] ==  self.imageurl[self.numbers['first']][0]:
+        elif answer ==  self.imageurl[self.numbers['first']][0]:
             
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',

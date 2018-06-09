@@ -108,7 +108,7 @@ class guess(Bot):
         g = guess(self.data)
         return {
             'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
-            'outputSpeech': '来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
+            'outputSpeech': r'来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
         }
         
     
@@ -117,7 +117,7 @@ class guess(Bot):
         g = guess(self.data)
         return {
             'card': TextCard('你回答的好像不是成语哦，让我们继续看图猜成语吧'),
-            'outputSpeech': '你回答的好像不是成语哦，让我们继续看图猜成语吧'
+            'outputSpeech': r'你回答的好像不是成语哦，让我们继续看图猜成语吧'
         }
         g.idiom()
     
@@ -162,12 +162,12 @@ class guess(Bot):
             tcard = TextCard('答案是什么呢')
             return {
                 'card': tcard,
-                'outputSpeech': '答案是什么呢？'
+                'outputSpeech': r'答案是什么呢？'
             }
         elif json.loads(answers)['idiom'] ==  self.imageurl[self.numbers['first']][0]:
             
             return {
-                'outputSpeech': '恭喜你答对了，你真棒！再来一道呗',
+                'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
         else:

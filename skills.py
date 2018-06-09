@@ -106,6 +106,7 @@ class guess(Bot):
         ]
     def launchRequest(self):
         
+        print(self.data)
         return {
             'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
             'outputSpeech': '来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
@@ -152,7 +153,6 @@ class guess(Bot):
         
         card = StandardCard()
         card.setTitle('看图猜成语引导')
-        card.setContent('看图猜成语引导')
         card.setContent('说出我想猜成语即可开始看图猜成语')
         card.setContent('想出答案以后：')
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')

@@ -180,7 +180,7 @@ class guess(Bot):
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                 'card': card
             }
     

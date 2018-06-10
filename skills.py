@@ -179,6 +179,9 @@ class guess(Bot):
                 'card': card
             }
         else:
+            num = open("num.txt", "w")
+            num.write(self.imageurl[self.number][0])
+            num.close()
             return {
                 'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，，不要气馁，再来一道',
                 'card': card

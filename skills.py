@@ -123,6 +123,9 @@ class guess(Bot):
     
     def idiom(self):
         
+        num = open("num.txt", "w")
+        num.write(self.imageurl[self.number][0])
+        num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -149,7 +152,9 @@ class guess(Bot):
     
     def answeridiom(self):
         
-        n = nu()
+        num = open("num.txt", "r")
+        ra = num.read(4)
+        num.close()
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -162,7 +167,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'答案是什么呢？'
             }
-        elif answer ==  self.answer:
+        elif answer ==  ra:
             
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
@@ -170,7 +175,7 @@ class guess(Bot):
             }
         else:
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + self.answer + '不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '不要气馁，再来一道',
                 'card': card
             }
     

@@ -114,12 +114,14 @@ class guess(Bot):
     
     def quesheng(self):
         
-        g = guess(self.data)
+        card = ImageCard()
+        card.addItem(self.imageurl[self.number][1])
+        card.addCueWords('小度小度，我觉得答案是......')
+        card.addCueWords('小度小度，我认为答案是......')
         return {
-            'card': TextCard('你回答的好像不是成语哦，让我们继续看图猜成语吧'),
+            'card': card,
             'outputSpeech': r'你回答的好像不是成语哦，让我们继续看图猜成语吧'
         }
-        g.idiom()
     
     def idiom(self):
         

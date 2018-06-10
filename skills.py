@@ -114,6 +114,9 @@ class guess(Bot):
     
     def quesheng(self):
         
+        num = open("num.txt", "w")
+        num.write(self.imageurl[self.number][0])
+        num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')

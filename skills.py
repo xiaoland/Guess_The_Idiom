@@ -10,7 +10,6 @@ import sys
 import json
 import requests
 import random
-import re
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard
@@ -24,7 +23,6 @@ class guess(Bot):
     def __init__(self, data):
         
         super().__init__(data)
-        self.data = data
         self.number = random.randint(0,67)
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
@@ -170,7 +168,6 @@ class guess(Bot):
             tcard = TextCard('答案是什么呢')
             return {
                 'card': tcard,
-                'outputSpeech': r'答案是什么呢？'
             }
         elif answer ==  ra:
             

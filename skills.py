@@ -171,6 +171,9 @@ class guess(Bot):
             }
         elif answer ==  ra:
             
+            num = open("num.txt", "w")
+            num.write(self.imageurl[self.number][0])
+            num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card

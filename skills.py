@@ -18,9 +18,6 @@ from dueros.card.ListCardItem import ListCardItem
 from dueros.card.StandardCard import StandardCard
 from dueros.card.TextCard import TextCard
 
-def handler(data):
-    
-
 class guess(Bot):
     
     def __init__(self, data):

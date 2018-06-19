@@ -103,10 +103,10 @@ class guess(Bot):
         
     def launchRequest(self):
         
-        g = guess(self.data)
+        card = TextCard('说出“开始猜成语”即可开始看图猜成语')
         return {
-            'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
-            'outputSpeech': r'来啊，我们一起猜成语吧'
+            'card': card,
+            'outputSpeech': r'来啊，我们一起猜成语吧,说出，开始猜成语，即可猜成语'
         }
         
     

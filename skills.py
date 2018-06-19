@@ -10,7 +10,6 @@ import sys
 import json
 import requests
 import random
-from dueros.duerskills.BotServer import application
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard

@@ -31,6 +31,7 @@ class guess(Bot):
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('idiom_answer', self.answeridiom)
+        self.addIntentHandler('answerunknow', self.answerunknow)
         self.addIntentHandler('ai.dueros.common.default_intent', self.quesheng)
         self.imageurl = [
             ['支离破碎', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E6%94%AF%E7%A6%BB%E7%A0%B4%E7%A2%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-02T05%3A40%3A12Z%2F-1%2F%2Ffe3796074d45a645faac8f230a2b5890e8a7dfcd370862dc3acb416e2c05ab26'],
@@ -109,7 +110,7 @@ class guess(Bot):
         g = guess(self.data)
         return {
             'card': TextCard('说出“开始猜成语”即可开始看图猜成语'),
-            'outputSpeech': r'来啊，猜成语啊，说出，开始猜成语，即可开始看图猜成语'
+            'outputSpeech': r'来啊，我们一起猜成语吧'
         }
         
     
@@ -118,13 +119,9 @@ class guess(Bot):
         num = open("num.txt", "w")
         num.write(self.imageurl[self.number][0])
         num.close()
-        card = ImageCard()
-        card.addItem(self.imageurl[self.number][1])
-        card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，我认为答案是......')
         return {
-            'card': card,
-            'outputSpeech': r'你回答的好像不是成语哦，让我们继续看图猜成语吧'
+            'card': TextCard('抱歉，我没有理解您的意思，要开始猜成语请说,开始猜成语,'),
+            'outputSpeech': r'抱歉，我没有理解您的意思，要开始猜成语请说,开始猜成语,'
         }
     
     def idiom(self):
@@ -135,9 +132,11 @@ class guess(Bot):
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，我认为答案是......')
+        card.addCueWords('小度小度，（成语答案）')
+        card.addCueWords('小度小度，我需要帮助/我不知道答案')
         return {
             'card': card,
+            'outputSpeech': r'上官，请您过目'
         }
     
     def welcome(self):
@@ -147,14 +146,23 @@ class guess(Bot):
         card.setContent('说出我想猜成语即可开始看图猜成语')
         card.setContent('想出答案以后：')
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
-        card.addCueWords('小度小度，我想猜成语')
-        card.addCueWords('小度小度，我喜欢猜成语')
-        card.addCueWords('小度小度，看图猜成语')
-        card.addCueWords('小度小度，我要猜成语')
+        card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可揭晓答案')
+        card.addCueWords('小度小度，开始猜成语')
         return {
-            'card': card
+            'card': card,
+            'outputSpeech': r'说出，开始猜成语，让我们开始猜成语吧'
         }
         
+    def answerunknow(self):
+        
+        num = open("num.txt", "r")
+        ra = num.read(4)
+        num.close()
+        card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra)
+        return {
+            'card': card,
+            'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra
+        }
     
     def answeridiom(self):
         

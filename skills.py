@@ -28,6 +28,7 @@ class guess(Bot):
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.addIntentHandler('answerunknow', self.answerunknow)
+        self.addIntentHandler('answerhelp', self.answerunknow)
         self.addIntentHandler('ai.dueros.common.default_intent', self.quesheng)
         self.imageurl = [
             ['支离破碎', 'http://dbp-resource.gz.bcebos.com/c34fc6ae-3146-0c82-9cee-105b18065f17/%E6%94%AF%E7%A6%BB%E7%A0%B4%E7%A2%8E.png?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-02T05%3A40%3A12Z%2F-1%2F%2Ffe3796074d45a645faac8f230a2b5890e8a7dfcd370862dc3acb416e2c05ab26'],
@@ -106,7 +107,7 @@ class guess(Bot):
         card = TextCard('说出“开始猜成语”即可开始看图猜成语')
         return {
             'card': card,
-            'outputSpeech': r'来啊，我们一起猜成语吧'
+            'outputSpeech': r'你准备好了吗，我们一起猜成语吧'
         }
         
     
@@ -116,14 +117,14 @@ class guess(Bot):
         num.write(self.imageurl[self.number][0])
         num.close()
         return {
-            'card': TextCard('抱歉，我没有理解您的意思，要开始猜成语请说,开始猜成语,'),
+            'card': TextCard('抱歉，我没有理解您的意思，要继续或开始猜成语请说,继续或开始猜成语,'),
             'outputSpeech': r'抱歉，我没有理解您的意思，要开始猜成语请说,开始猜成语,'
         }
     
     def idiom(self):
         
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0])
+        num.write(self.imageurl[self.number][0] + str(self.number))
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -139,10 +140,10 @@ class guess(Bot):
         
         card = StandardCard()
         card.setTitle('看图猜成语引导')
-        card.setContent('说出我想猜成语即可开始看图猜成语')
+        card.setContent('说出，开始猜成语，或，我准备好了，即可开始看图猜成语')
         card.setContent('想出答案以后：')
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
-        card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可揭晓答案')
+        card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示')
         card.addCueWords('小度小度，开始猜成语')
         return {
             'card': card,
@@ -151,15 +152,37 @@ class guess(Bot):
         
     def answerunknow(self):
         
+        number = random.randint(1,4)
         num = open("num.txt", "r")
-        ra = num.read(4)
-        num.close()
-        card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra)
-        return {
-            'card': card,
-            'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra
-        }
-    
+
+        if number == 1:
+            
+            ra = num.read(4)
+            num.close()
+            card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra + '，要继续猜成语，请说继续猜成语')
+            return {
+                'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra + '，要继续猜成语，请说继续猜成语'
+            }
+        elif number == 2:
+            ra = num.read(1)
+            num.close()
+            card = TextCard('上官，提示到了，答案的第一个字是' + ra)
+            return {
+                'outputSpeech': r'上官，提示到了，答案的第一个字是' + ra
+            }
+        elif number == 3:
+            ra = num.read(2)
+            num.close()
+            card = TextCard('皇上，您的助理来了，答案的前两个字是' + ra)
+            return {
+                'outputSpeech': r'皇上，您的助理来了，答案的前两个字是' + ra
+            }
+        elif number == 4:
+            card = TextCard('诶呀，成语躲起来了，加油想一想吧')
+            return {
+                'outputSpeech': '诶呀，成语躲起来了，加油想一想吧'
+            }
+                           
     def answeridiom(self):
         
         num = open("num.txt", "r")

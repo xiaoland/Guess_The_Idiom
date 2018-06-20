@@ -172,7 +172,7 @@ class guess(Bot):
         card.addCueWords('小度小度，我认为答案是......')
         if not answer:
             self.nlu.ask('sys.idiom')
-            tcard = TextCard('答案是什么呢')
+            tcard = TextCard('您认为答案是什么呢')
             return {
                 'card': tcard,
             }
@@ -190,7 +190,7 @@ class guess(Bot):
             num.write(self.imageurl[self.number][0])
             num.close()
             return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，，不要气馁，再来一道',
+                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                 'card': card
             }
     

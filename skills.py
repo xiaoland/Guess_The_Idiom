@@ -166,16 +166,16 @@ class guess(Bot):
         elif number == 2:
             ra = num.read(1)
             num.close()
-            card = TextCard('上官，提示到了，答案的第一个字是' + ra)
+            card = TextCard('上官，答案的第一个字是' + ra)
             return {
-                'outputSpeech': r'上官，提示到了，答案的第一个字是' + ra
+                'outputSpeech': r'上官，答案的第一个字是' + ra
             }
         elif number == 3:
             ra = num.read(2)
             num.close()
-            card = TextCard('皇上，您的助理来了，答案的前两个字是' + ra)
+            card = TextCard('皇上，答案的前两个字是' + ra)
             return {
-                'outputSpeech': r'皇上，您的助理来了，答案的前两个字是' + ra
+                'outputSpeech': r'皇上，答案的前两个字是' + ra
             }
         elif number == 4:
             card = TextCard('诶呀，成语躲起来了，加油想一想吧')

@@ -131,6 +131,7 @@ class guess(Bot):
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，（成语答案）')
         card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        self.waitAnswer()
         return {
             'card': card,
             'outputSpeech': r'上官，请您过目'
@@ -145,6 +146,7 @@ class guess(Bot):
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
         card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示')
         card.addCueWords('小度小度，开始猜成语')
+        self.waitAnswer()
         return {
             'card': card,
             'outputSpeech': r'说出，开始猜成语，让我们开始猜成语吧'
@@ -159,14 +161,16 @@ class guess(Bot):
             
             ra = num.read(4)
             num.close()
-            card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra + '，要继续猜成语，请说继续猜成语')
+            card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra )
+            self.waitAnswer()
             return {
-                'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra + '，要继续猜成语，请说继续猜成语'
+                'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra
             }
         elif number == 2:
             ra = num.read(1)
             num.close()
             card = TextCard('上官，答案的第一个字是' + ra)
+            self.waitAnswer()
             return {
                 'outputSpeech': r'上官，答案的第一个字是' + ra
             }
@@ -174,11 +178,13 @@ class guess(Bot):
             ra = num.read(2)
             num.close()
             card = TextCard('皇上，答案的前两个字是' + ra)
+            self.waitAnswer()
             return {
                 'outputSpeech': r'皇上，答案的前两个字是' + ra
             }
         elif number == 4:
             card = TextCard('诶呀，成语躲起来了，加油想一想吧')
+            self.waitAnswer()
             return {
                 'outputSpeech': '诶呀，成语躲起来了，加油想一想吧'
             }
@@ -195,9 +201,11 @@ class guess(Bot):
         card.addCueWords('小度小度，我认为答案是......')
         if not answer:
             self.nlu.ask('sys.idiom')
+            self.waitAnswer()
             tcard = TextCard('您认为答案是什么呢')
             return {
                 'card': tcard,
+                'outputSpeech': r'您的答案是什么呢？'
             }
         elif answer ==  ra:
             

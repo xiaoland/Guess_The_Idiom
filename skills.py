@@ -117,14 +117,20 @@ class guess(Bot):
         num.write(self.imageurl[self.number][0])
         num.close()
         return {
-            'card': TextCard('抱歉，我没有理解您的意思，要继续或开始猜成语请说,继续或开始猜成语,'),
-            'outputSpeech': r'抱歉，我没有理解您的意思，要开始猜成语请说,开始猜成语,'
+            'card': TextCard('抱歉，我没有理解您的意思'),
+            'outputSpeech': r'抱歉，我没有理解您的意思'
         }
     
     def idiom(self):
         
-        num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0] + str(self.number))
+        num = open("num.txt", "w+")
+        a = num.read(7)[-1]
+        if a > '5':
+            a = 0
+            l = str(int(num.read(7)[-2]) + 1)
+        else:
+            a = a + 1
+        num.write(self.imageurl[self.number][0] + l + a)
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -209,16 +215,28 @@ class guess(Bot):
             }
         elif answer ==  ra:
             
-            num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0])
+            num = open("num.txt", "w+")
+            a = num.read(7)[-1]
+            if a > '5':
+                a = 0
+                l = str(int(num.read(7)[-2]) + 1)
+            else:
+                a = a + 1
+            num.write(self.imageurl[self.number][0] + l + a)
             num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
         else:
-            num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0])
+            num = open("num.txt", "w+")
+            a = num.read(7)[-1]
+            if a > '5':
+                a = 0
+                l = str(int(num.read(7)[-2]) + 1)
+            else:
+                a = a + 1
+            num.write(self.imageurl[self.number][0] + l + a)
             num.close()
             return {
                 'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',

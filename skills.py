@@ -124,10 +124,10 @@ class guess(Bot):
     def idiom(self):
         
         num = open("num.txt", "w+")
-        a = num.read(7)[-1]
+        a = num.read(6)[-1]
         if a > '5':
             a = 0
-            l = str(int(num.read(7)[-2]) + 1)
+            l = str(int(num.read(6)[-2]) + 1)
         else:
             a = a + 1
         num.write(self.imageurl[self.number][0] + l + a)

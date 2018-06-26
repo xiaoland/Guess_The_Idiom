@@ -26,6 +26,7 @@ class guess(Bot):
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
+        self.addIntentHandler('c_idiom', self.cidiom)
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.addIntentHandler('answerunknow', self.answerunknow)
         self.addIntentHandler('answerhelp', self.answerunknow)
@@ -121,17 +122,46 @@ class guess(Bot):
             'outputSpeech': r'抱歉，我没有理解您的意思'
         }
     
+    def cidiom(self):
+        
+        num = open("num.txt", "w")
+        lun = open("lun.txt", "r+")
+        g = num.read(2)[-1]
+        if g > '5':
+            g = 0
+            l = str(int(num.read(2)[-2]) + 1)
+            lun.write(l + str(g))
+        else:
+            g = g + 1
+            l = str(int(num.read(2)[-2]) + 1)
+            lun.write(l + str(g))
+        num.write(self.imageurl[self.number][0])
+        num.close()
+        lun.close()
+        card = ImageCard()
+        card.addItem(self.imageurl[self.number][1])
+        card.addCueWords('小度小度，我觉得答案是......')
+        card.addCueWords('小度小度，（成语答案）')
+        card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        self.waitAnswer()
+        return {
+            'card': card,
+            'outputSpeech': r'嗯嗯，继续'
+        }
+    
     def idiom(self):
         
-        num = open("num.txt", "w+")
-        a = num.read(6)[-1]
-        if a > '5':
+        num = open("num.txt", "w")
+        lun = open("lun.txt", "r+")
+        if lun.read(2)[-1] > 5:
+            l = lun.read(2)[-2]
             a = 0
-            l = str(int(num.read(6)[-2]) + 1)
+            lun.write(str(int(l) + 1) + str(a))
         else:
-            a = a + 1
-        num.write(self.imageurl[self.number][0] + l + a)
+            pass
+        num.write(self.imageurl[self.number][0])
         num.close()
+        lun.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -151,6 +181,7 @@ class guess(Bot):
         card.setContent('想出答案以后：')
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
         card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示')
+        card.setContent('成语图片由度秘事业部提供')
         card.addCueWords('小度小度，开始猜成语')
         self.waitAnswer()
         return {
@@ -215,29 +246,39 @@ class guess(Bot):
             }
         elif answer ==  ra:
             
-            num = open("num.txt", "w+")
-            a = num.read(7)[-1]
-            if a > '5':
-                a = 0
-                l = str(int(num.read(7)[-2]) + 1)
+            num = open("num.txt", "w")
+            lun = open("lun.txt", "r+")
+            g = num.read(2)[-1]
+            if g > '5':
+                g = 0
+                l = str(int(num.read(2)[-2]) + 1)
+                lun.write(l + str(g))
             else:
-                a = a + 1
-            num.write(self.imageurl[self.number][0] + l + a)
+                g = g + 1
+                l = str(int(num.read(2)[-2]) + 1)
+                lun.write(l + str(g))
+            num.write(self.imageurl[self.number][0])
             num.close()
+            lun.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
         else:
-            num = open("num.txt", "w+")
-            a = num.read(7)[-1]
-            if a > '5':
-                a = 0
-                l = str(int(num.read(7)[-2]) + 1)
+            num = open("num.txt", "w")
+            lun = open("lun.txt", "r+")
+            g = num.read(2)[-1]
+            if g > '5':
+                g = 0
+                l = str(int(num.read(2)[-2]) + 1)
+                lun.write(l + str(g))
             else:
-                a = a + 1
-            num.write(self.imageurl[self.number][0] + l + a)
+                g = g + 1
+                l = str(int(num.read(2)[-2]) + 1)
+                lun.write(l + str(g))
+            num.write(self.imageurl[self.number][0])
             num.close()
+            lun.close()
             return {
                 'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                 'card': card

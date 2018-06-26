@@ -27,6 +27,7 @@ class guess(Bot):
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('c_idiom', self.cidiom)
+        elf.addIntentHandler('howlg', self.howlg)
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.addIntentHandler('answerunknow', self.answerunknow)
         self.addIntentHandler('answerhelp', self.answerunknow)
@@ -120,6 +121,15 @@ class guess(Bot):
         return {
             'card': TextCard('抱歉，我没有理解您的意思'),
             'outputSpeech': r'抱歉，我没有理解您的意思'
+        }
+    
+    def howlg(self):
+        
+        lun = open("lun.txt", "r")
+        card = TextCard('您现在在第' + lun.read(2)[-2] + '轮' + '第' + lun.read(2)[-1] + '关')
+        return {
+            'card': card,
+            'outputSpeech': '您现在在第' + lun.read(2)[-2] + '轮' + '第' + lun.read(2)[-1] + '关'
         }
     
     def cidiom(self):

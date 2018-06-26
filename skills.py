@@ -134,19 +134,18 @@ class guess(Bot):
     
     def cidiom(self):
         
-        num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0])
-        num.close()
+        
         num = open("num.txt", "a+")
         g = num.read(6)[-1]
         if g > '5':
             g = 0
             l = str(int(num.read(6)[-2]) + 1)
-            num.write(l + g)
         else:
             g = g + 1
             l = str(int(num.read(6)[-2]))
-            num.write(l + g)
+        num.close()
+        num = open("num.txt", "w")
+        num.write(self.imageurl[self.number][0] + l + g)
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -162,7 +161,7 @@ class guess(Bot):
     def idiom(self):
         
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0])
+        num.write(self.imageurl[self.number][0] + '00')
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -248,37 +247,35 @@ class guess(Bot):
             }
         elif answer ==  ra:
             
-            num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0])
-            num.close()
+            
             num = open("num.txt", "a+")
             g = num.read(6)[-1]
             if g > '5':
                 g = 0
                 l = str(int(num.read(6)[-2]) + 1)
-                num.write(l + g)
             else:
                 g = g + 1
                 l = str(int(num.read(6)[-2]))
-                num.write(l + g)
+            num.close()
+            num = open("num.txt", "w")
+            num.write(self.imageurl[self.number][0] + l + g)
             num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
         else:
-            num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0])
-            num.close()
+            
             num = open("num.txt", "a+")
             g = num.read(6)[-1]
             if g > '5':
                 g = 0
                 l = str(int(num.read(6)[-2]) + 1)
-                num.write(l + g)
             else:
                 l = str(int(num.read(6)[-2]))
-                num.write(l + g)
+            num.close()
+            num = open("num.txt", "w")
+            num.write(self.imageurl[self.number][0] + l + g)
             num.close()
             return {
                 'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',

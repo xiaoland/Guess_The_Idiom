@@ -164,7 +164,7 @@ class guess(Bot):
         num = open("num.txt", "w")
         num.write(self.imageurl[self.number][0])
         num.close()
-        lun = open("lun.txt", "a+")
+        lun = open("/bot-sdk-python/dueros/duerskills/lun.txt", "w+)
         if lun.read(2)[-1] > 5:
             l = lun.read(2)[-2]
             a = 0

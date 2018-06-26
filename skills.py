@@ -165,7 +165,7 @@ class guess(Bot):
         num.write(self.imageurl[self.number][0])
         num.close()
         lun = open("lun.txt")
-        data = lun.read().lun.close()
+        data = lun.read()
         if data[-1] > 5:
             l = data[-2]
             a = 0

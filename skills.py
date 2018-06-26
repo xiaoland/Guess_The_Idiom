@@ -27,7 +27,7 @@ class guess(Bot):
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
         self.addIntentHandler('c_idiom', self.cidiom)
-        elf.addIntentHandler('howlg', self.howlg)
+        self.addIntentHandler('howlg', self.howlg)
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.addIntentHandler('answerunknow', self.answerunknow)
         self.addIntentHandler('answerhelp', self.answerunknow)

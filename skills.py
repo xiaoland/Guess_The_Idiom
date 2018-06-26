@@ -135,6 +135,8 @@ class guess(Bot):
     def cidiom(self):
         
         num = open("num.txt", "w")
+        num.write(self.imageurl[self.number][0])
+        num.close()
         lun = open("lun.txt", "r+")
         g = num.read(2)[-1]
         if g > '5':
@@ -145,8 +147,6 @@ class guess(Bot):
             g = g + 1
             l = str(int(num.read(2)[-2]) + 1)
             lun.write(l + str(g))
-        num.write(self.imageurl[self.number][0])
-        num.close()
         lun.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])

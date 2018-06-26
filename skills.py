@@ -137,17 +137,17 @@ class guess(Bot):
         num = open("num.txt", "w")
         num.write(self.imageurl[self.number][0])
         num.close()
-        lun = open("lun.txt", "a+")
-        g = num.read(2)[-1]
+        num = open("num.txt", "a+")
+        g = num.read(6)[-1]
         if g > '5':
             g = 0
-            l = str(int(num.read(2)[-2]) + 1)
-            lun.write(l + str(g))
+            l = str(int(num.read(6)[-2]) + 1)
+            num.write(l + g)
         else:
             g = g + 1
-            l = str(int(num.read(2)[-2]) + 1)
-            lun.write(l + str(g))
-        lun.close()
+            l = str(int(num.read(6)[-2]))
+            num.write(l + g)
+        num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -164,15 +164,6 @@ class guess(Bot):
         num = open("num.txt", "w")
         num.write(self.imageurl[self.number][0])
         num.close()
-        lun = open("lun.txt")
-        data = lun.read()
-        if data[-1] > 5:
-            l = data[-2]
-            a = 0
-            lun.write(str(int(l) + 1) + str(a))
-        else:
-            pass
-        lun.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -258,38 +249,37 @@ class guess(Bot):
         elif answer ==  ra:
             
             num = open("num.txt", "w")
-            lun = open("lun.txt", "r+")
-            g = num.read(2)[-1]
-            if g > '5':
-                g = 0
-                l = str(int(num.read(2)[-2]) + 1)
-                lun.write(l + str(g))
-            else:
-                g = g + 1
-                l = str(int(num.read(2)[-2]) + 1)
-                lun.write(l + str(g))
             num.write(self.imageurl[self.number][0])
             num.close()
-            lun.close()
+            num = open("num.txt", "a+")
+            g = num.read(6)[-1]
+            if g > '5':
+                g = 0
+                l = str(int(num.read(6)[-2]) + 1)
+                num.write(l + g)
+            else:
+                g = g + 1
+                l = str(int(num.read(6)[-2]))
+                num.write(l + g)
+            num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
         else:
             num = open("num.txt", "w")
-            lun = open("lun.txt", "r+")
-            g = num.read(2)[-1]
-            if g > '5':
-                g = 0
-                l = str(int(num.read(2)[-2]) + 1)
-                lun.write(l + str(g))
-            else:
-                g = g + 1
-                l = str(int(num.read(2)[-2]) + 1)
-                lun.write(l + str(g))
             num.write(self.imageurl[self.number][0])
             num.close()
-            lun.close()
+            num = open("num.txt", "a+")
+            g = num.read(6)[-1]
+            if g > '5':
+                g = 0
+                l = str(int(num.read(6)[-2]) + 1)
+                num.write(l + g)
+            else:
+                l = str(int(num.read(6)[-2]))
+                num.write(l + g)
+            num.close()
             return {
                 'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                 'card': card

@@ -162,6 +162,8 @@ class guess(Bot):
     def idiom(self):
         
         num = open("num.txt", "w")
+        num.write(self.imageurl[self.number][0])
+        num.close()
         lun = open("lun.txt", "r+")
         if lun.read(2)[-1] > 5:
             l = lun.read(2)[-2]
@@ -169,8 +171,6 @@ class guess(Bot):
             lun.write(str(int(l) + 1) + str(a))
         else:
             pass
-        num.write(self.imageurl[self.number][0])
-        num.close()
         lun.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])

@@ -116,7 +116,7 @@ class guess(Bot):
     def quesheng(self):
         
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0])
+        num.write(self.imageurl[self.number][0] + '000')
         num.close()
         return {
             'card': TextCard('抱歉，我没有理解您的意思'),
@@ -126,8 +126,8 @@ class guess(Bot):
     def howlg(self):
         
         num = open("num.txt", "r")
-        l = num.read(7)[-3]
-        g = num.read(7)[-2]
+        l = num.read()[-3]
+        g = num.read()[-2]
         card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
         return {
             'card': card,
@@ -138,14 +138,14 @@ class guess(Bot):
         
         
         num = open("num.txt", "r")
-        g = num.read(7)[-2]
-        c = num.read(7)[-1]
+        g = num.read()[-2]
+        c = num.read()[-1]
         if g > '5':
             g = 0
-            l = str(int(num.read(7)[-3]) + 1)
+            l = str(int(num.read()[-3]) + 1)
         else:
             g = g + 1
-            l = num.read(7)[-3]
+            l = num.read()[-3]
         num.close()
         num = open("num.txt", "w")
         wt = self.imageurl[self.number][0] + l + g + c
@@ -198,19 +198,10 @@ class guess(Bot):
         
     def answerunknow(self):
         
-        number = random.randint(1,4)
+        number = random.randint(2,4)
         num = open("num.txt", "r")
 
-        if number == 1:
-            
-            ra = num.read(4)
-            num.close()
-            card = TextCard('要加油哦，这一次就告诉你答案吧，答案是' + ra )
-            self.waitAnswer()
-            return {
-                'outputSpeech': r'要加油哦，这一次就告诉你答案吧，答案是' + ra
-            }
-        elif number == 2:
+        if number == 2:
             ra = num.read(1)
             num.close()
             card = TextCard('上官，答案的第一个字是' + ra)
@@ -255,14 +246,14 @@ class guess(Bot):
             
             
             num = open("num.txt", "r")
-            g = num.read(7)[-2]
-            c = num.read(7)[-1]
+            g = num.read()[-2]
+            c = num.read()[-1]
             if g > '5':
                 g = 0
-                l = str(int(num.read(7)[-3]) + 1)
+                l = str(int(num.read()[-3]) + 1)
             else:
                 g = g + 1
-                l = num.read(7)[-3]
+                l = num.read()[-3]
             num.close()
             num = open("num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c
@@ -276,13 +267,13 @@ class guess(Bot):
         else:
             
             num = open("num.txt", "r")
-            g = num.read(7)[-2]
-            c = str(int(num.read(7)[-1]) + 1)
+            g = num.read()[-2]
+            c = str(int(num.read()[-1]) + 1)
             if g > '5':
                 g = 0
-                l = str(int(num.read(7)[-3]) + 1)
+                l = str(int(num.read()[-3]) + 1)
             else:
-                l = num.read(7)[-3]
+                l = num.read()[-3]
             num.close()
             num = open("num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c

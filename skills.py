@@ -125,27 +125,30 @@ class guess(Bot):
     
     def howlg(self):
         
-        lun = open("lun.txt", "r")
-        card = TextCard('您现在在第' + lun.read(2)[-2] + '轮' + '第' + lun.read(2)[-1] + '关')
+        num = open("num.txt", "r")
+        l = num.read(7)[-3]
+        g = num.read(7)[-2]
+        card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
         return {
             'card': card,
-            'outputSpeech': '您现在在第' + lun.read(2)[-2] + '轮' + '第' + lun.read(2)[-1] + '关'
+            'outputSpeech': '您现在在第' + l + '轮' + '第' + g + '关'
         }
     
     def cidiom(self):
         
         
-        num = open("num.txt", "a+")
-        g = num.read(6)[-1]
+        num = open("num.txt", "r")
+        g = num.read(7)[-2]
+        c = num.read(7)[-1]
         if g > '5':
             g = 0
-            l = str(int(num.read(6)[-2]) + 1)
+            l = str(int(num.read(7)[-3]) + 1)
         else:
             g = g + 1
-            l = str(int(num.read(6)[-2]))
+            l = num.read(7)[-3]
         num.close()
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0] + l + g)
+        num.write(self.imageurl[self.number][0] + l + g + c)
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -161,7 +164,7 @@ class guess(Bot):
     def idiom(self):
         
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0] + '00')
+        num.write(self.imageurl[self.number][0] + '000')
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -248,17 +251,18 @@ class guess(Bot):
         elif answer ==  ra:
             
             
-            num = open("num.txt", "a+")
-            g = num.read(6)[-1]
+            num = open("num.txt", "r")
+            g = num.read(7)[-2]
+            c = num.read(7)[-1]
             if g > '5':
                 g = 0
-                l = str(int(num.read(6)[-2]) + 1)
+                l = str(int(num.read(7)[-3]) + 1)
             else:
                 g = g + 1
-                l = str(int(num.read(6)[-2]))
+                l = num.read(7)[-3]
             num.close()
             num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0] + l + g)
+            num.write(self.imageurl[self.number][0] + l + g + c)
             num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
@@ -266,21 +270,27 @@ class guess(Bot):
             }
         else:
             
-            num = open("num.txt", "a+")
-            g = num.read(6)[-1]
+            num = open("num.txt", "r")
+            g = num.read(7)[-2]
+            c = str(int(num.read(7)[-1]) + 1)
             if g > '5':
                 g = 0
-                l = str(int(num.read(6)[-2]) + 1)
+                l = str(int(num.read(7)[-3]) + 1)
             else:
-                l = str(int(num.read(6)[-2]))
+                l = num.read(7)[-3]
             num.close()
             num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0] + l + g)
+            num.write(self.imageurl[self.number][0] + l + g + c)
             num.close()
-            return {
-                'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
-                'card': card
-            }
+            if int(c) > 3:
+                return {
+                    'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
+                    'card': card
+                }
+            else:
+                return {
+                    'outputSpeech': '答错了哦，再努力想想吧，需要提示可以说，我需要帮助'
+                }
     
 if __name__ == '__main__':
     

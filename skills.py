@@ -284,7 +284,7 @@ class guess(Bot):
             num.close()
             if int(c) > 3:
                 return {
-                    'outputSpeech': '好遗憾，答错了，正确答案是：' + ra + '，不要气馁，再来一道',
+                    'outputSpeech': '好遗憾，还是答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                     'card': card
                 }
             else:

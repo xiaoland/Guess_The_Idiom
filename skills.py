@@ -148,7 +148,8 @@ class guess(Bot):
             l = num.read(7)[-3]
         num.close()
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0] + l + g + c)
+        wt = self.imageurl[self.number][0] + l + g + c
+        num.write(wt)
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -164,7 +165,9 @@ class guess(Bot):
     def idiom(self):
         
         num = open("num.txt", "w")
-        num.write(self.imageurl[self.number][0] + '000')
+        wt = self.imageurl[self.number][0] + '000'
+        print(wt)
+        num.write(wt)
         num.close()
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -262,7 +265,9 @@ class guess(Bot):
                 l = num.read(7)[-3]
             num.close()
             num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0] + l + g + c)
+            wt = self.imageurl[self.number][0] + l + g + c
+            print(wt)
+            num.write(wt)
             num.close()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
@@ -280,7 +285,8 @@ class guess(Bot):
                 l = num.read(7)[-3]
             num.close()
             num = open("num.txt", "w")
-            num.write(self.imageurl[self.number][0] + l + g + c)
+            wt = self.imageurl[self.number][0] + l + g + c
+            num.write(wt)
             num.close()
             if int(c) > 3:
                 return {

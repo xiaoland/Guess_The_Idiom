@@ -124,6 +124,7 @@ class guess(Bot):
         num = open("./num.txt", "w")
         num.write(self.imageurl[self.number][0] + l + g + c)
         num.close()
+        self.waitAnswer()
         return {
             'card': TextCard('抱歉，我没有理解您的意思'),
             'outputSpeech': r'抱歉，我没有理解您的意思'
@@ -135,6 +136,7 @@ class guess(Bot):
         l = num.read(7)[-3]
         g = num.read(7)[-2]
         card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
+        self.waitAnswer()
         return {
             'card': card,
             'outputSpeech': '您现在在第' + l + '轮' + '第' + g + '关'
@@ -263,6 +265,7 @@ class guess(Bot):
             print(wt)
             num.write(wt)
             num.close()
+            self.waitAnswer()
             return {
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
@@ -281,11 +284,13 @@ class guess(Bot):
             num.write(wt)
             num.close()
             if int(c) > 3:
+                self.waitAnswer()
                 return {
                     'outputSpeech': '好遗憾，还是答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                     'card': card
                 }
             else:
+                self.waitAnswer()
                 return {
                     'outputSpeech': '答错了哦，再努力想想吧，需要提示可以说，我需要帮助'
                 }

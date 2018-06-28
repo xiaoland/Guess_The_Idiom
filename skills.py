@@ -256,7 +256,7 @@ class guess(Bot):
                 l = str(int(l) + 1)
             else:
                 g = str(int(g) + 1)
-                l = num.read(7)[-3]
+                l = gs[-3]
             num.close()
             num = open("./num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c
@@ -274,7 +274,7 @@ class guess(Bot):
                 l = str(int(l) + 1)
             else:
                 g = str(int(g) + 1)
-                l = num.read(7)[-3]
+                l = gs[-3]
             num.close()
             num = open("./num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c

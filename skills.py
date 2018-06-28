@@ -115,8 +115,14 @@ class guess(Bot):
     
     def quesheng(self):
         
+        num = open("./num.txt", "r")
+        gs = num.read(7)
+        c = gs[-1]
+        g = gs[-2]
+        l = gs[-3]
+        num.close()
         num = open("./num.txt", "w")
-        num.write(self.imageurl[self.number][0] + '000')
+        num.write(self.imageurl[self.number][0] + l + g + c)
         num.close()
         return {
             'card': TextCard('抱歉，我没有理解您的意思'),

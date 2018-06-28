@@ -115,7 +115,7 @@ class guess(Bot):
     
     def quesheng(self):
         
-        num = open("num.txt", "w")
+        num = open("./num.txt", "w")
         num.write(self.imageurl[self.number][0] + '000')
         num.close()
         return {
@@ -137,7 +137,7 @@ class guess(Bot):
     def cidiom(self):
         
         
-        num = open("num.txt", "r")
+        num = open("./num.txt", "r")
         g = num.read(7)[-2]
         c = num.read(7)[-1]
         if g > '5':
@@ -147,7 +147,7 @@ class guess(Bot):
             g = g + 1
             l = num.read(7)[-3]
         num.close()
-        num = open("num.txt", "w")
+        num = open("./num.txt", "w")
         wt = self.imageurl[self.number][0] + l + g + c
         num.write(wt)
         num.close()
@@ -164,7 +164,7 @@ class guess(Bot):
     
     def idiom(self):
         
-        num = open("num.txt", "w")
+        num = open("./num.txt", "w")
         wt = self.imageurl[self.number][0] + '000'
         print(wt)
         num.write(wt)
@@ -199,8 +199,6 @@ class guess(Bot):
     def answerunknow(self):
         
         number = random.randint(2,4)
-        num = open("num.txt", "r")
-
         if number == 2:
             ra = num.read(1)
             num.close()
@@ -226,7 +224,7 @@ class guess(Bot):
                            
     def answeridiom(self):
         
-        num = open("num.txt", "r")
+        num = open("./num.txt", "r")
         ra = num.read(4)
         num.close()
         answer = self.getSlots('sys.idiom')
@@ -245,7 +243,7 @@ class guess(Bot):
         elif answer ==  ra:
             
             
-            num = open("num.txt", "r")
+            num = open("./num.txt", "r")
             g = num.read(7)[-2]
             c = num.read(7)[-1]
             if g > '5':
@@ -255,7 +253,7 @@ class guess(Bot):
                 g = g + 1
                 l = num.read(7)[-3]
             num.close()
-            num = open("num.txt", "w")
+            num = open("./num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c
             print(wt)
             num.write(wt)
@@ -266,7 +264,7 @@ class guess(Bot):
             }
         else:
             
-            num = open("num.txt", "r")
+            num = open("./num.txt", "r")
             g = num.read()[-2]
             c = str(int(num.read(7)[-1]) + 1)
             if g > '5':
@@ -275,7 +273,7 @@ class guess(Bot):
             else:
                 l = num.read()[-3]
             num.close()
-            num = open("num.txt", "w")
+            num = open("./num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c
             num.write(wt)
             num.close()

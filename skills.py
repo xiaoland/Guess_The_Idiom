@@ -226,7 +226,8 @@ class guess(Bot):
         
         num = open("./num.txt", "r")
         ra = num.read(4)
-        num.close()
+        g = num.read(7)[-2]
+        c = num.read(7)[-1]
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
@@ -242,13 +243,9 @@ class guess(Bot):
             }
         elif answer ==  ra:
             
-            
-            num = open("./num.txt", "r")
-            g = num.read(7)[-2]
-            c = num.read(7)[-1]
             if g > '5':
                 g = 0
-                l = str(int(num.read(7)[-3]) + 1)
+                l = str(int(l) + 1)
             else:
                 g = g + 1
                 l = num.read(7)[-3]
@@ -264,12 +261,11 @@ class guess(Bot):
             }
         else:
             
-            num = open("./num.txt", "r")
             g = num.read(7)[-2]
-            c = str(int(num.read(7)[-1]) + 1)
+            c = str(int(c) + 1)
             if g > '5':
                 g = 0
-                l = str(int(num.read(7)[-3]) + 1)
+                l = str(l) + 1)
             else:
                 l = num.read(7)[-3]
             num.close()

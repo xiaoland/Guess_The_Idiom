@@ -226,8 +226,10 @@ class guess(Bot):
         
         num = open("./num.txt", "r")
         ra = num.read(4)
-        g = num.read(7)[-2]
-        c = num.read(7)[-1]
+        gs = num.read(7)
+        c = gs[-1]
+        g = gs[-2]
+        l = gs[-3]
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])

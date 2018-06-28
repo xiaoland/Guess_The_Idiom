@@ -265,7 +265,7 @@ class guess(Bot):
             c = str(int(c) + 1)
             if g > '5':
                 g = 0
-                l = str(l) + 1)
+                l = str(int(l) + 1)
             else:
                 l = num.read(7)[-3]
             num.close()

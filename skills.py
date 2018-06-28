@@ -249,7 +249,7 @@ class guess(Bot):
                 g = 0
                 l = str(int(l) + 1)
             else:
-                g = g + 1
+                g = str(int(g) + 1)
                 l = num.read(7)[-3]
             num.close()
             num = open("./num.txt", "w")
@@ -263,12 +263,11 @@ class guess(Bot):
             }
         else:
             
-            g = num.read(7)[-2]
-            c = str(int(c) + 1)
             if g > '5':
                 g = 0
                 l = str(int(l) + 1)
             else:
+                g = str(int(g) + 1)
                 l = num.read(7)[-3]
             num.close()
             num = open("./num.txt", "w")

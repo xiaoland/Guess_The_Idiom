@@ -142,7 +142,7 @@ class guess(Bot):
         c = num.read(7)[-1]
         if g > '5':
             g = 0
-            l = str(int(num.read()[-3]) + 1)
+            l = str(int(num.read(7)[-3]) + 1)
         else:
             g = g + 1
             l = num.read(7)[-3]
@@ -265,13 +265,13 @@ class guess(Bot):
         else:
             
             num = open("./num.txt", "r")
-            g = num.read()[-2]
+            g = num.read(7)[-2]
             c = str(int(num.read(7)[-1]) + 1)
             if g > '5':
                 g = 0
                 l = str(int(num.read(7)[-3]) + 1)
             else:
-                l = num.read()[-3]
+                l = num.read(7)[-3]
             num.close()
             num = open("./num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c

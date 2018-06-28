@@ -254,7 +254,7 @@ class guess(Bot):
         elif answer ==  ra:
             
             if g > '5':
-                g = 0
+                g = '0'
                 l = str(int(l) + 1)
             else:
                 g = str(int(g) + 1)
@@ -273,23 +273,27 @@ class guess(Bot):
         else:
             
             if g > '5':
-                g = 0
+                g = '0'
                 l = str(int(l) + 1)
             else:
                 g = str(int(g) + 1)
                 l = gs[-3]
             num.close()
             num = open("./num.txt", "w")
-            wt = self.imageurl[self.number][0] + l + g + c
-            num.write(wt)
-            num.close()
             if int(c) > 3:
+                c = '0'
+                wt = self.imageurl[self.number][0] + l + g + c
+                num.write(wt)
+                num.close()
                 self.waitAnswer()
                 return {
                     'outputSpeech': '好遗憾，还是答错了，正确答案是：' + ra + '，不要气馁，再来一道',
                     'card': card
                 }
             else:
+                wt = self.imageurl[self.number][0] + l + g + str(int(c) + 1)
+                num.write(wt)
+                num.close()
                 self.waitAnswer()
                 return {
                     'outputSpeech': '答错了哦，再努力想想吧，需要提示可以说，我需要帮助'

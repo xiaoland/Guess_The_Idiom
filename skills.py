@@ -126,8 +126,8 @@ class guess(Bot):
     def howlg(self):
         
         num = open("num.txt", "r")
-        l = num.read()[-3]
-        g = num.read()[-2]
+        l = num.read(7)[-3]
+        g = num.read(7)[-2]
         card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
         return {
             'card': card,
@@ -138,14 +138,14 @@ class guess(Bot):
         
         
         num = open("num.txt", "r")
-        g = num.read()[-2]
-        c = num.read()[-1]
+        g = num.read(7)[-2]
+        c = num.read(7)[-1]
         if g > '5':
             g = 0
             l = str(int(num.read()[-3]) + 1)
         else:
             g = g + 1
-            l = num.read()[-3]
+            l = num.read(7)[-3]
         num.close()
         num = open("num.txt", "w")
         wt = self.imageurl[self.number][0] + l + g + c
@@ -246,14 +246,14 @@ class guess(Bot):
             
             
             num = open("num.txt", "r")
-            g = num.read()[-2]
-            c = num.read()[-1]
+            g = num.read(7)[-2]
+            c = num.read(7)[-1]
             if g > '5':
                 g = 0
-                l = str(int(num.read()[-3]) + 1)
+                l = str(int(num.read(7)[-3]) + 1)
             else:
                 g = g + 1
-                l = num.read()[-3]
+                l = num.read(7)[-3]
             num.close()
             num = open("num.txt", "w")
             wt = self.imageurl[self.number][0] + l + g + c
@@ -268,10 +268,10 @@ class guess(Bot):
             
             num = open("num.txt", "r")
             g = num.read()[-2]
-            c = str(int(num.read()[-1]) + 1)
+            c = str(int(num.read(7)[-1]) + 1)
             if g > '5':
                 g = 0
-                l = str(int(num.read()[-3]) + 1)
+                l = str(int(num.read(7)[-3]) + 1)
             else:
                 l = num.read()[-3]
             num.close()

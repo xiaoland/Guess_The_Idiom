@@ -155,7 +155,7 @@ class guess(Bot):
         # ------------- fix by sunshaolei -------
 
         rand_ids = range(len(self.imageurl))     # 根据imageurl的个数生成全部index
-        random.shuffle(rand_ids)     # 打乱所有 index 顺序
+        random.choice(rand_ids)     # 打乱所有 index 顺序
 
         self.setSessionAttribute("queue", json.dumps(rand_ids), json.dumps([]))     # 把列表数据存储在 session里 只针对这次会话生效
         self.setSessionAttribute("pos", json.dumps(1), json.dumps(1))    # 存储当前正在出现第几个

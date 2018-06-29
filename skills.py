@@ -157,7 +157,7 @@ class guess(Bot):
         rand_ids = random.randint(0,89)
         
         self.setSessionAttribute("queue", json.dumps(rand_ids), json.dumps([]))     # 把列表数据存储在 session里 只针对这次会话生效
-        self.setSessionAttribute("pos", json.dumps(1), json.dumps(1))    # 存储当前正在出现第几个
+        self.setSessionAttribute("pos", json.dumps(rand_ids), json.dumps(rand_ids))    # 存储当前正在出现第几个
         self.setSessionAttribute("error_num", json.dumps(0), json.dumps(0))  # 存储当前使用者错误次数
         self.setSessionAttribute("guanqia_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
         self.setSessionAttribute("lun_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
@@ -358,8 +358,6 @@ class guess(Bot):
                 'outputSpeech': r'上官，答案的第一个字是' + ra[0]
             }
         elif number == 3:
-            ra = num.read(2)
-            num.close()
             card = TextCard('皇上，答案的前两个字是' + ra[0] + ra[1])
             self.waitAnswer()
             return {

@@ -209,7 +209,7 @@ class guess(Bot):
                 'card': tcard,
                 'outputSpeech': r'您的答案是什么呢？'
             }
-        elif answer == self.imageurl[pos]:      # 此分支为回答正确的处理
+        elif answer == self.imageurl[pos][0]:      # 此分支为回答正确的处理
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）

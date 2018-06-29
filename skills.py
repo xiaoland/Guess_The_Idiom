@@ -154,8 +154,7 @@ class guess(Bot):
 
         # ------------- fix by sunshaolei -------
 
-        rand_ids = range(len(self.imageurl))     # 根据imageurl的个数生成全部index
-        rand_ids = random.sample(range(len(self.imageurl)), len(self.imageurl))
+        rand_ids = random.randint(0,89)
         
         self.setSessionAttribute("queue", json.dumps(rand_ids), json.dumps([]))     # 把列表数据存储在 session里 只针对这次会话生效
         self.setSessionAttribute("pos", json.dumps(1), json.dumps(1))    # 存储当前正在出现第几个
@@ -214,11 +213,11 @@ class guess(Bot):
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if guanqia_num > '5':
+            if guanqia_num > 5:
                 guanqia_num = 0
                 lun_num = lun_num + 1
             else:
-                guanqia_num = guanqia_num
+                guanqia_num = guanqia_num + 1
 
             self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num), '0')    # 关卡加一
             self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
@@ -251,7 +250,7 @@ class guess(Bot):
                 # num.close()
 
                 right_answer = self.imageurl[pos][0]
-                self.setSessionAttribute("error_num", '0', '0')    # 提示了答案 重置错误次数
+                self.setSessionAttribute("error_num", 0, '0')    # 提示了答案 重置错误次数
 
                 self.waitAnswer()
                 return {
@@ -311,7 +310,7 @@ class guess(Bot):
         pos = json.loads(self.getSessionAttribute("pos", '0'))
         guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        if guanqia_num > '5':
+        if guanqia_num > 5:
             self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0')
             self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
         else:

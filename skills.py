@@ -199,7 +199,6 @@ class guess(Bot):
                 lun_num = lun_num + 1
             else:
                 guanqia_num = guanqia_num
-            # ------fix by susnhaolei -----
 
             self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num), '0')    # 关卡加一
             self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
@@ -277,7 +276,8 @@ class guess(Bot):
     
     def howlg(self):
         
-        
+        l = json.loads(self.getSessionAttribute("lun_num", '0'))
+        g = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
         self.waitAnswer()
         return {
@@ -288,20 +288,16 @@ class guess(Bot):
     def cidiom(self):
         
         
-        num = open("./num.txt", "r")
-        g = num.read(7)[-2]
-        c = num.read(7)[-1]
-        if g > '5':
-            g = 0
-            l = str(int(num.read(7)[-3]) + 1)
+        pos = json.loads(self.getSessionAttribute("pos", '0'))
+        guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
+        lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
+        if guanqia_num > '5':
+            self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0')
+            self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
         else:
-            g = g + 1
-            l = num.read(7)[-3]
-        num.close()
-        num = open("./num.txt", "w")
-        wt = self.imageurl[self.number][0] + l + g + c
-        num.write(wt)
-        num.close()
+            self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
+            self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')
+        
         card = ImageCard()
         card.addItem(self.imageurl[self.number][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -334,21 +330,21 @@ class guess(Bot):
     def answerunknow(self):
         
         number = random.randint(2,4)
+        pos = json.loads(self.getSessionAttribute("pos", '0'))
+        ra = self.imageurl[pos][0]
         if number == 2:
-            ra = num.read(1)
-            num.close()
-            card = TextCard('上官，答案的第一个字是' + ra)
+            card = TextCard('上官，答案的第一个字是' + ra[0])
             self.waitAnswer()
             return {
-                'outputSpeech': r'上官，答案的第一个字是' + ra
+                'outputSpeech': r'上官，答案的第一个字是' + ra[0]
             }
         elif number == 3:
             ra = num.read(2)
             num.close()
-            card = TextCard('皇上，答案的前两个字是' + ra)
+            card = TextCard('皇上，答案的前两个字是' + ra[0] + ra[1])
             self.waitAnswer()
             return {
-                'outputSpeech': r'皇上，答案的前两个字是' + ra
+                'outputSpeech': r'皇上，答案的前两个字是' + ra[0] + ra[1]
             }
         elif number == 4:
             card = TextCard('诶呀，成语躲起来了，加油想一想吧')

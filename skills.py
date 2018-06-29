@@ -234,7 +234,7 @@ class guess(Bot):
 
             # ------fix by susnhaolei -----
 
-            if g > 5:
+            if guanqia_num > 5:
                 self.setSessionAttribute("guanqia_num", json.dumps(0), '0')    # 关卡设为零
                 self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0') # 轮数加一
             else:

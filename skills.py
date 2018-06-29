@@ -240,23 +240,13 @@ class guess(Bot):
                 self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')  # 关卡加一
                 self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')  #轮数不变
 
-            if int(error_num) > 3:
-
-                self.setSessionAttribute("error_num", 0, '0')  # 提示了答案 重置错误次数
-                self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
-                self.waitAnswer()
-                return {
-                    'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，再来一道',
-                    'card': card
-                }
-            else:
-
-                self.setSessionAttribute("error_num", json.dumps(error_num + 1), '0')
-
-                self.waitAnswer()
-                return {
-                    'outputSpeech': '答错了哦，再努力想想吧，需要提示可以说，我需要帮助'
-                }
+            self.setSessionAttribute("error_num", 0, '0')  # 提示了答案 重置错误次数
+            self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
+            self.waitAnswer()
+            return {
+                'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，再来一道',
+                'card': card
+            }
 
 
     def quesheng(self):

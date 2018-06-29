@@ -286,17 +286,16 @@ class guess(Bot):
         
         l = json.loads(self.getSessionAttribute("lun_num", '0'))
         g = json.loads(self.getSessionAttribute("guanqia_num", '0'))
-        card = TextCard('您现在在第' + l + '轮' + '第' + g + '关')
+        card = TextCard('您现在在第' + str(l) + '轮' + '第' + str(g) + '关')
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': '您现在在第' + l + '轮' + '第' + g + '关'
+            'outputSpeech': '您现在在第' + str(l) + '轮' + '第' + str(g) + '关'
         }
     
     def cidiom(self):
         
-        
-        pos = json.loads(self.getSessionAttribute("pos", '0'))
+        rand_ids = random.randint(0,87)
         guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
         if int(guanqia_num) > 5:
@@ -305,9 +304,9 @@ class guess(Bot):
         else:
             self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
             self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')
-        
+        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
         card = ImageCard()
-        card.addItem(self.imageurl[self.number][1])
+        card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，（成语答案）')
         card.addCueWords('小度小度，我需要帮助/我不知道答案')

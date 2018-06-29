@@ -154,7 +154,7 @@ class guess(Bot):
 
         # ------------- fix by sunshaolei -------
 
-        rand_ids = random.randint(0,89)
+        rand_ids = random.randint(0,87)
         
         self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), json.dumps(0))  # 存储当前正在出现的图片的答案
         self.setSessionAttribute("error_num", json.dumps(0), json.dumps(0))  # 存储当前使用者错误次数
@@ -197,7 +197,7 @@ class guess(Bot):
 
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
-        np = random.randint(0,89)
+        np = random.randint(0,87)
         card.addItem(self.imageurl[np][1])
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，我认为答案是......')
@@ -213,7 +213,7 @@ class guess(Bot):
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if guanqia_num > 5:
+            if int(guanqia_num) > 5:
                 guanqia_num = 0
                 lun_num = lun_num + 1
             else:
@@ -233,20 +233,20 @@ class guess(Bot):
 
             # ------fix by susnhaolei -----
 
-            if guanqia_num > 5:
-                self.setSessionAttribute("guanqia_num", json.dumps(0), '0')    # 关卡设为零
+            if int(guanqia_num) > 5:
+                self.setSessionAttribute("guanqia_num", json.dumps(0), '0')  # 关卡设为零
                 self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0') # 轮数加一
             else:
-                self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')    # 关卡加一
-                self.setSessionAttribute("lun_num", json.dumps(lun_num), '0') #轮数不变
+                self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')  # 关卡加一
+                self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')  #轮数不变
 
-            if error_num > 3:
+            if int(error_num) > 3:
 
-                self.setSessionAttribute("error_num", 0, '0')    # 提示了答案 重置错误次数
+                self.setSessionAttribute("error_num", 0, '0')  # 提示了答案 重置错误次数
                 self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
                 self.waitAnswer()
                 return {
-                    'outputSpeech': '好遗憾，还是答错了，正确答案是：' + right_answer + '，不要气馁，再来一道',
+                    'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，再来一道',
                     'card': card
                 }
             else:
@@ -299,7 +299,7 @@ class guess(Bot):
         pos = json.loads(self.getSessionAttribute("pos", '0'))
         guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        if guanqia_num > 5:
+        if int(guanqia_num) > 5:
             self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0')
             self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
         else:
@@ -339,7 +339,7 @@ class guess(Bot):
         
         number = random.randint(2,4)
         pos = json.loads(self.getSessionAttribute("pos", '0'))
-        ra = self.imageurl[pos][0]
+        ra = pos
         if number == 2:
             card = TextCard('上官，答案的第一个字是' + ra[0])
             self.waitAnswer()

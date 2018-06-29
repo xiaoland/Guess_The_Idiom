@@ -156,8 +156,7 @@ class guess(Bot):
 
         rand_ids = random.randint(0,89)
         
-        self.setSessionAttribute("queue", json.dumps(rand_ids), json.dumps([]))     # 把列表数据存储在 session里 只针对这次会话生效
-        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), json.dumps(self.imageurl[rand_ids][0]))    # 存储当前正在出现第几个
+        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), json.dumps(0))  # 存储当前正在出现的图片的答案
         self.setSessionAttribute("error_num", json.dumps(0), json.dumps(0))  # 存储当前使用者错误次数
         self.setSessionAttribute("guanqia_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
         self.setSessionAttribute("lun_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
@@ -230,7 +229,7 @@ class guess(Bot):
                 'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
                 'card': card
             }
-        else:
+        elif answer != pos:
 
             # ------fix by susnhaolei -----
 

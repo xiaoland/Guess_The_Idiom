@@ -163,7 +163,7 @@ class guess(Bot):
         self.setSessionAttribute("lun_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
 
         card = ImageCard()
-        card.addItem(self.imageurl[1][1])
+        card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('小度小度，我觉得答案是......')
         card.addCueWords('小度小度，（成语答案）')
         card.addCueWords('小度小度，我需要帮助/我不知道答案')

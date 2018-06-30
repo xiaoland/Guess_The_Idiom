@@ -172,9 +172,9 @@ class guess(Bot):
         self.setSessionAttribute("lerror_num", json.dumps(0), json.dumps(0))
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
-        card.addCueWords(r'小度小度，我觉得答案是......')
-        card.addCueWords(r'小度小度，（成语答案）')
-        card.addCueWords(r'小度小度，我需要帮助/我不知道答案')
+        card.addCueWords(r'我觉得答案是......')
+        card.addCueWords(r'（你的成语答案）')
+        card.addCueWords(r'我需要帮助/我不知道答案')
         self.waitAnswer()
         return {
             'card': card,
@@ -208,8 +208,8 @@ class guess(Bot):
         card = ImageCard()
         np = random.randint(0,87)
         card.addItem(self.imageurl[np][1])
-        card.addCueWords(r'小度小度，我觉得答案是......')
-        card.addCueWords(r'小度小度，我认为答案是......')
+        card.addCueWords(r'我觉得答案是......')
+        card.addCueWords(r'我认为答案是......')
         if not answer:
             self.nlu.ask('sys.idiom')
             self.waitAnswer()
@@ -315,9 +315,9 @@ class guess(Bot):
         self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
-        card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，（成语答案）')
-        card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        card.addCueWords('我觉得答案是......')
+        card.addCueWords('（你的成语答案）')
+        card.addCueWords('我需要帮助/我不知道答案')
         self.waitAnswer()
         return {
             'card': card,
@@ -334,9 +334,9 @@ class guess(Bot):
         self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
-        card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，（成语答案）')
-        card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        card.addCueWords('我觉得答案是......')
+        card.addCueWords('（你的成语答案）')
+        card.addCueWords('我需要帮助/我不知道答案')
         self.waitAnswer()
         return {
             'card': card,
@@ -352,7 +352,7 @@ class guess(Bot):
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
         card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示')
         card.setContent('成语图片由度秘事业部提供')
-        card.addCueWords('小度小度，开始猜成语')
+        card.addCueWords('开始猜成语')
         self.waitAnswer()
         return {
             'card': card,

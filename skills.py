@@ -32,6 +32,7 @@ class guess(Bot):
         self.addIntentHandler('idiom_answer', self.answeridiom)
         self.addIntentHandler('answerunknow', self.answerunknow)
         self.addIntentHandler('answerhelp', self.answerunknow)
+        self.addIntentHandler('nidiom', self.nidiom)
         self.addIntentHandler('ai.dueros.common.default_intent', self.quesheng)
         self.imageurl = [
             ['支离破碎', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E6%94%AF%E7%A6%BB%E7%A0%B4%E7%A2%8E.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A55Z%2F-1%2F%2Fb34d00a868a863f4a2f5e5079564082f5fe84fedc985c0460bec7136d26ef0ab'],
@@ -160,7 +161,7 @@ class guess(Bot):
         self.setSessionAttribute("error_num", json.dumps(0), json.dumps(0))  # 存储当前使用者错误次数
         self.setSessionAttribute("guanqia_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
         self.setSessionAttribute("lun_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
-
+        self.setSessionAttribute("lerror_num", json.dumps(0), json.dumps(0))
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('小度小度，我觉得答案是......')
@@ -194,7 +195,7 @@ class guess(Bot):
         guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
         error_num = json.loads(self.getSessionAttribute("error_num", '0'))
-
+        lerror_num = json.loads(self.getSessionAttribute("lerror_num", '0'))
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         np = random.randint(0,87)
@@ -213,40 +214,59 @@ class guess(Bot):
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if int(guanqia_num) > 5:
-                guanqia_num = 0
-                lun_num = lun_num + 1
+            if int(guanqia_num) > 9:
+                self.setSessionAttribute("guanqia_num", json.dumps(0), '0')    # 关卡加一
+                self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0')
+                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
+                self.setSessionAttribute("error_num", json.dumps(0), '0')
+                tcard = ('恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + '你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+                return {
+                    'outputSpeech': '恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                    'card': tcard
+                }
             else:
-                guanqia_num = guanqia_num + 1
 
-            self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num), '0')    # 关卡加一
-            self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
-            self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
-            self.setSessionAttribute("error_num", 0, '0')     # 错误次数重置
-
-            self.waitAnswer()
-            return {
-                'outputSpeech': r'恭喜你答对了，你真棒！再来一道呗',
-                'card': card
-            }
-        elif answer != pos:
-
-            # ------fix by susnhaolei -----
-
-            if int(guanqia_num) > 5:
+                self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')    # 关卡加一
+                self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
+                self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
+                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
+                self.waitAnswer()
+                return {
+                    'outputSpeech': r'恭喜你答对了，你真棒！让我们继续吧',
+                    'card': card
+                }
+        else:            
+            if int(guanqia_num) > 9:
                 self.setSessionAttribute("guanqia_num", json.dumps(0), '0')  # 关卡设为零
-                self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0') # 轮数加一
+                self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0') # 轮数加一
+                self.setSessionAttribute("error_num", json.dumps(0), '0')
+                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
+                if int(lerror_num) > 2:
+                    return {
+                        'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续',
+                        'card': card
+                    }
+                else:
+                    tcard = ('恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + '本题的答案是：' + pos + '，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+                    return {
+                        'outputSpeech': '恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                        'card': tcard
+                    }
             else:
-                self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')  # 关卡加一
+                self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
                 self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')  #轮数不变
-
-            self.setSessionAttribute("error_num", 0, '0')  # 提示了答案 重置错误次数
-            self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
-            self.waitAnswer()
-            return {
-                'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，再来一道',
-                'card': card
-            }
+                self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
+                self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
+                self.waitAnswer()
+                if int(lerror_num) > 2:
+                    return {
+                        'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
+                        'card': card
+                    }
+                else:
+                    return {
+                        'outputSpeeech': '答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
+                    }
 
 
     def quesheng(self):
@@ -288,12 +308,14 @@ class guess(Bot):
         rand_ids = random.randint(0,87)
         guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        if int(guanqia_num) > 5:
-            self.setSessionAttribute("lun_num", json.dumps(lun_num + 1), '0')
+        error_num = json.loads(self.getSessionAttribute("error_num", '0'))
+        pos = json.loads(self.getSessionAttribute("pos", '0'))
+        if int(guanqia_num) > 9:
+            self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0')
             self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
         else:
-            self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
-            self.setSessionAttribute("guanqia_num", json.dumps(guanqia_num + 1), '0')
+            self.setSessionAttribute("lun_num", json.dumps(int(lun_num)), '0')
+            self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')
         self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
@@ -303,10 +325,26 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'嗯嗯，继续'
+            'outputSpeech': r'上一题的答案是' + pos + '，好的，让我们继续吧'
         }
     
-
+    def nidiom(self):
+        
+        lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
+        self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
+        self.setSessionAttribute("error_num", json.dumps(0), '0')
+        self.setSessionAttribute("lerror_num", json.dumps(0), '0')
+        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
+        card = ImageCard()
+        card.addItem(self.imageurl[rand_ids][1])
+        card.addCueWords('小度小度，我觉得答案是......')
+        card.addCueWords('小度小度，（成语答案）')
+        card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        self.waitAnswer()
+        return {
+            'card': card,
+            'outputSpeech': r'好的，让我们进入下一轮'
+        }
     
     def welcome(self):
         

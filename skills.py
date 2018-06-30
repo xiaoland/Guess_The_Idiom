@@ -260,7 +260,6 @@ class guess(Bot):
                 self.setSessionAttribute("lun_num", lun_num, 0)
                 self.setSessionAttribute("pos", pos, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)
-                guanqia_num = self.getSessionAttribute("guanqia_num", 0)
 
                 card = ImageCard()
                 card.addItem(self.imageurl[pos][1])

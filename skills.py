@@ -253,7 +253,7 @@ class guess(Bot):
                 else:
                     tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'本题的答案是：' + pos + r'，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                     return {
-                        'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                        'reprompt': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
                         'card': tcard
                     }
             else:
@@ -270,7 +270,7 @@ class guess(Bot):
                 else:
                     self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
                     return {
-                        'outputSpeeech': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
+                        'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
 

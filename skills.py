@@ -257,17 +257,18 @@ class guess(Bot):
                         'card': tcard
                     }
             else:
-                self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
+
                 self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')  #轮数不变
-                self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
-                self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
                 self.waitAnswer()
                 if int(lerror_num) > 2:
+                    self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
+                    self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
                     return {
                         'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
                         'card': card
                     }
                 else:
+                    self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
                     return {
                         'outputSpeeech': '答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }

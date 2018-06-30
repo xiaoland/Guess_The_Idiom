@@ -276,24 +276,11 @@ class guess(Bot):
 
     def quesheng(self):
 
-        # ---fix by sunshaolei---
-        # num = open("./num.txt", "r")
-        # gs = num.read(7)
-        # c = gs[-1]
-        # g = gs[-2]
-        # l = gs[-3]
-        # num.close()
-        # num = open("./num.txt", "w")
-        # num.write(self.imageurl[self.number][0] + l + g + c)
-        # num.close()
-        # ---fix by sunshaolei---
-
         error_num = json.loads(self.getSessionAttribute("error_num", '0'))    # 获取错误次数
         self.setSessionAttribute("error_num", json.dumps(error_num + 1), '0')   # 增加错误次数
 
         self.waitAnswer()
         return {
-            'card': TextCard('抱歉，我没有理解您的意思'),
             'outputSpeech': r'抱歉，我没有理解您的意思'
         }
     
@@ -348,7 +335,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'好的，让我们进入下一轮'
+            'outputSpeech': r'好的，让我们进入第' + str(lun_num) + '轮'
         }
     
     def welcome(self):

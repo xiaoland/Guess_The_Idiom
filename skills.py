@@ -215,16 +215,12 @@ class guess(Bot):
 
         print(repr(answer))
         print(repr(self.imageurl[pos][0]))
-        card = ImageCard()
-        rand_ids = random.randint(0,87)
-        card.addItem(self.imageurl[rand_ids][1]) # 新的关卡图片准备
-        card.addCueWords(r'我觉得答案是......')
-        card.addCueWords(r'我认为答案是......')
+
         if not answer:
-            self.nlu.ask('sys.idiom')
+
+            self.nlu.ask('idiom')
             self.waitAnswer()
             return {
-                'card': card,
                 'outputSpeech': r'您的答案是什么呢？'
             }
         elif answer == self.imageurl[pos][0]:      # 此分支为回答正确的处理
@@ -275,20 +271,17 @@ class guess(Bot):
 
                     card = ImageCard()
                     card.addItem(self.imageurl[new_pos][1])
-                    card.addCueWords(r'我觉得答案是......')
-                    card.addCueWords(r'我认为答案是......')
-
 
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不要气馁，让我们继续',
                         'card': card
                     }
                 else:
-                    tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'本题的答案是：' + self.imageurl[pos][0] + r'，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+
+                    outputSpeech = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'本题的答案是：' + self.imageurl[pos][0] + r'，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                     return {
-                        'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                        'outputSpeech': outputSpeech,
                         'reprompt': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
-                        'card': tcard
                     }
             else:
 

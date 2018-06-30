@@ -134,12 +134,12 @@ class guess(Bot):
         
         bodyTemplate = BodyTemplate1()
         bodyTemplate.setBackGroundImage('http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%9B%AE%E4%B8%8D%E8%AF%86%E4%B8%81.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A48Z%2F-1%2F%2F454b61cd89235a7248857bb018c3927f82b94bb8ba19de6ecc7e318247f5a7b3')
-        bodyTemplate.setTitle('看图猜成语')
-        bodyTemplate.setPlainTextContent('准备好了了以后，说出“开始猜成语”即可开始游戏')
+        bodyTemplate.setTitle(r'看图猜成语')
+        bodyTemplate.setPlainTextContent(r'准备好了了以后，说出“开始猜成语”即可开始游戏')
         directive = RenderTemplate(bodyTemplate)
         return {
             'directives': [directive],
-            'outputSpeech': '准备好了了以后，说出，开始猜成语，即可开始游戏'
+            'outputSpeech': r'准备好了了以后，说出，开始猜成语，即可开始游戏'
         }
 
 
@@ -168,9 +168,9 @@ class guess(Bot):
         self.setSessionAttribute("lerror_num", json.dumps(0), json.dumps(0))
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
-        card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，（成语答案）')
-        card.addCueWords('小度小度，我需要帮助/我不知道答案')
+        card.addCueWords(r'小度小度，我觉得答案是......')
+        card.addCueWords(r'小度小度，（成语答案）')
+        card.addCueWords(r'小度小度，我需要帮助/我不知道答案')
         self.waitAnswer()
         return {
             'card': card,
@@ -204,12 +204,12 @@ class guess(Bot):
         card = ImageCard()
         np = random.randint(0,87)
         card.addItem(self.imageurl[np][1])
-        card.addCueWords('小度小度，我觉得答案是......')
-        card.addCueWords('小度小度，我认为答案是......')
+        card.addCueWords(r'小度小度，我觉得答案是......')
+        card.addCueWords(r'小度小度，我认为答案是......')
         if not answer:
             self.nlu.ask('sys.idiom')
             self.waitAnswer()
-            tcard = TextCard('您认为答案是什么呢')
+            tcard = TextCard(r'您认为答案是什么呢')
             return {
                 'card': tcard,
                 'outputSpeech': r'您的答案是什么呢？'
@@ -223,9 +223,9 @@ class guess(Bot):
                 self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0')
                 self.setSessionAttribute("lerror_num", json.dumps(0), '0')
                 self.setSessionAttribute("error_num", json.dumps(0), '0')
-                tcard = ('恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + '你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+                tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                 return {
-                    'outputSpeech': '恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                    'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
                     'card': tcard
                 }
             else:
@@ -247,13 +247,13 @@ class guess(Bot):
                 self.setSessionAttribute("lerror_num", json.dumps(0), '0')
                 if int(lerror_num) > 2:
                     return {
-                        'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续',
                         'card': card
                     }
                 else:
-                    tcard = ('恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + '本题的答案是：' + pos + '，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+                    tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'本题的答案是：' + pos + r'，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                     return {
-                        'outputSpeech': '恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
+                        'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
                         'card': tcard
                     }
             else:
@@ -264,13 +264,13 @@ class guess(Bot):
                     self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
                     self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
                     return {
-                        'outputSpeech': '好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
                         'card': card
                     }
                 else:
                     self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
                     return {
-                        'outputSpeeech': '答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
+                        'outputSpeeech': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
 
@@ -301,11 +301,11 @@ class guess(Bot):
         
         l = json.loads(self.getSessionAttribute("lun_num", '0'))
         g = json.loads(self.getSessionAttribute("guanqia_num", '0'))
-        card = TextCard('您现在在第' + str(l) + '轮' + '第' + str(g) + '关')
+        card = TextCard(r'您现在在第' + str(l) + r'轮' + r'第' + str(g) + r'关')
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': '您现在在第' + str(l) + '轮' + '第' + str(g) + '关'
+            'outputSpeech': r'您现在在第' + str(l) + r'轮' + r'第' + str(g) + r'关'
         }
     
     def cidiom(self):
@@ -388,7 +388,7 @@ class guess(Bot):
             card = TextCard('诶呀，成语躲起来了，加油想一想吧')
             self.waitAnswer()
             return {
-                'outputSpeech': '诶呀，成语躲起来了，加油想一想吧'
+                'outputSpeech': r'诶呀，成语躲起来了，加油想一想吧'
             }
                            
 

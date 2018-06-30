@@ -305,7 +305,7 @@ class guess(Bot):
                 elif int(lerror_num) < 4:
                     self.setSessionAttribute("lerror_num", int(lerror_num) + 1, 0)
                     return {
-                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
+                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 0),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 

@@ -258,7 +258,7 @@ class guess(Bot):
 
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(guanqia_num) + '关，加油！让我们继续吧',
+                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(int(guanqia_num) + 1) + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            

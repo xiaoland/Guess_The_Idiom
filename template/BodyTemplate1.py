@@ -16,20 +16,20 @@ class BodyTemplate1(BaseDirective):
         :param content:
         '''
         super(BodyTemplate1, self).__init__('BodyTemplate1')
-
+        self.data["token"] = self.genToken()
 
     def setBackgroundImage(self, url, widthPixels=0, heightPixels=0):
         self.data["backgroundImage"] = {
             "url": url,
-            "widthPixels": widthPixels,
-            "heightPixels": heightPixels,
+            #"widthPixels": widthPixels,
+            #"heightPixels": heightPixels,
         }
 
     def setTitle(self, title):
         self.data["title"] = title
 
     def setTextContent(self, text):
-        self.data["content"] = {
+        self.data["textContent"] = {
             "type": "PlainText",
             "text": text
         }

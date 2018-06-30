@@ -19,7 +19,7 @@ class BodyTemplate1(BaseDirective):
 
 
     def setBackGroundImage(self, url, widthPixels=0, heightPixels=0):
-        self.data["setBackGroundImage"] = {
+        self.data["setBackgroundImage"] = {
             "url": url,
             "widthPixels": widthPixels,
             "heightPixels": heightPixels,

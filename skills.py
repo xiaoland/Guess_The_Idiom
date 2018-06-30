@@ -11,7 +11,7 @@ import json
 import requests
 import json
 import random
-from dueros.duerskills.template.BodyTemplate1 import BodyTemplate1
+from dueros.duerskills.template.BodyTemplate1 import bodyTemplate1
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard
@@ -137,9 +137,8 @@ class guess(Bot):
         bodyTemplate.setBackGroundImage('http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%9B%AE%E4%B8%8D%E8%AF%86%E4%B8%81.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A48Z%2F-1%2F%2F454b61cd89235a7248857bb018c3927f82b94bb8ba19de6ecc7e318247f5a7b3')
         bodyTemplate.setTitle(r'看图猜成语')
         bodyTemplate.setPlainTextContent(r'准备好了了以后，说出“开始猜成语”即可开始游戏')
-        directive = RenderTemplate(bodyTemplate)
         return {
-            'directives': [directive],
+            'directives': [bodyTemplate],
             'outputSpeech': r'准备好了了以后，说出，开始猜成语，即可开始游戏'
         }
 

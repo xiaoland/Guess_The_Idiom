@@ -167,7 +167,7 @@ class guess(Bot):
         self.setSessionAttribute("error_num", 0, 0)  # 存储当前使用者错误次数
         self.setSessionAttribute("guanqia_num", 0, 0)  # 存储当前使用者关卡
         self.setSessionAttribute("lun_num", 0, 0)  # 存储当前使用者关卡
-        self.setSessionAttribute("lerror_num", 0, 0)
+        self.setSessionAttribute("lerror_num", 0, 3)
         card = ImageCard()
         card.addItem(self.imageurl[pos][1])
         card.addCueWords(r'我觉得答案是......')
@@ -264,16 +264,16 @@ class guess(Bot):
 
                 self.setSessionAttribute("lun_num", lun_num, 0)  #轮数不变
                 self.waitAnswer()
-                if lerror_num > 2:
-                    self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)  # 关卡加一
+                if int(lerror_num) > 2:
+                    self.setSessionAttribute("guanqia_num", int(guanqia_num) + 1, 0)  # 关卡加一
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧',
                         'card': card
                     }
-                else:
-                    self.setSessionAttribute("lerror_num", lerror_num + 1, 0)
+                elif int(lerrror_num) < 4:
+                    self.setSessionAttribute("lerror_num", int(lerror_num) + 1, 0)
                     return {
-                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
+                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 0),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
@@ -324,7 +324,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'上一题的答案是' + self.imageurl[pos][0] + '，好的，让我们继续吧'
+            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们继续吧'
         }
     
     def nidiom(self):

@@ -313,7 +313,7 @@ class guess(Bot):
         elif answer == self.imageurl[pos][0]:  # 此分支为回答正确的处理
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if guanqia_num >= 9:
+            if guanqia_num >= 10:
                 self.setSessionAttribute("guanqia_num", 1, 0)  # 关卡加一
                 self.setSessionAttribute("lun_num", lun_num + 1, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)

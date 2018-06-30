@@ -236,9 +236,10 @@ class guess(Bot):
                 self.setSessionAttribute("lun_num", lun_num, 0)
                 self.setSessionAttribute("pos", self.imageurl[np][0], '')
                 self.setSessionAttribute("lerror_num", 0, 0)
+                guanqia_num = self.getSessionAttribute("guanqia_num", 0)
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + guaqia_num + '关，加油！让我们继续吧',
+                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(guaqia_num) + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            

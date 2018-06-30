@@ -323,23 +323,23 @@ class guess(Bot):
                     bodyTemplate.setBackGroundImage(
                         'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%85%A8%E5%BF%83%E6%8A%95%E5%85%A5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A00Z%2F-1%2F%2F65d7fb04d32c2d64abb134ad8be345c4bd81a32bdfe8071dc56d19da7c9de5f0')
                     bodyTemplate.setPlainTextContent(
-                        r'你太棒了，全部都答对了，一共有十道题哦，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说：“退出”。')
+                        r'你太棒了，全部都答对了，一共有十道题哦，请对我说"开始下一轮",进入第' + str(int(lun_num) + 1) + '轮，需要退出请说：“退出”。')
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
-                        'outputSpeech': r'你太棒了，全部都答对了，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出'
+                        'outputSpeech': r'你太棒了，全部都答对了，说出“开始下一轮"进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出'
                     }
                 else:
 
                     bodyTemplate = BodyTemplate1()
                     bodyTemplate.setBackGroundImage(
                         'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%85%A8%E5%BF%83%E6%8A%95%E5%85%A5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A00Z%2F-1%2F%2F65d7fb04d32c2d64abb134ad8be345c4bd81a32bdfe8071dc56d19da7c9de5f0')
-                    bodyTemplate.setPlainTextContent(r'你太棒了，答对了' + str(10 - error_num) + r'道题目，说出“下一轮”即可进入第' + str(
+                    bodyTemplate.setPlainTextContent(r'你太棒了，答对了' + str(10 - error_num) + r'道题目，说出“开始下一轮”即可进入第' + str(
                         int(lun_num) + 1) + '轮，需要退出请说：“退出”。')
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
-                        'outputSpeech': r'你太棒了，答对了' + str(10 - error_num) + r'道题目，说出“下一轮”即可进入第' + str(
+                        'outputSpeech': r'你太棒了，答对了' + str(10 - error_num) + r'道题目，说出“开始下一轮”即可进入第' + str(
                             int(lun_num) + 1) + '轮，需要退出请说：“退出”。'
                     }
 
@@ -373,12 +373,12 @@ class guess(Bot):
                     bodyTemplate.setBackGroundImage(
                         'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%85%A8%E5%BF%83%E6%8A%95%E5%85%A5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A00Z%2F-1%2F%2F65d7fb04d32c2d64abb134ad8be345c4bd81a32bdfe8071dc56d19da7c9de5f0')
                     bodyTemplate.setPlainTextContent(r'这一题的答案是' + self.imageurl[pos][0] + '不过你很棒棒哦，一共十道题，您答对了：' + str(
-                        10 - error_num) + r'题，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说：“退出”。')
+                        10 - error_num) + r'题，说出“开始下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说：“退出”。')
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
                         'outputSpeech': '这一题的答案是' + self.imageurl[pos][0] + '不过你很棒棒哦，一共十道题，您答对了：' + str(
-                            10 - error_num) + r'题，说出，下一轮，即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说，退出，'
+                            10 - error_num) + r'题，说出"开始下一轮"，即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说，退出，'
                     }
 
                 else:

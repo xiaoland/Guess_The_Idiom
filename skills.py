@@ -11,6 +11,7 @@ import json
 import requests
 import json
 import random
+from dueros.duerskills.template. import
 from dueros.Bot import Bot
 from dueros.card.ImageCard import ImageCard 
 from dueros.card.ListCard import ListCard

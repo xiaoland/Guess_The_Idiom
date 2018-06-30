@@ -232,11 +232,15 @@ class guess(Bot):
                 self.setSessionAttribute("lun_num", lun_num + 1, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)
                 self.setSessionAttribute("error_num", 0, 0)
-                tcard = TextCard(r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
+                bodyTemplate = BodyTemplate1()
+                bodyTemplate.setBackGroundImage('http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%9B%AE%E4%B8%8D%E8%AF%86%E4%B8%81.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A48Z%2F-1%2F%2F454b61cd89235a7248857bb018c3927f82b94bb8ba19de6ecc7e318247f5a7b3')
+                bodyTemplate.setPlainTextContent(r'恭喜你，完成了本轮游戏，一共十道题，您只答错了：' + str(error_num) + r'题，你很棒棒哦，说出“下一轮”即可进入' + str(int(lun_num) + 1) + '，需要退出请说：“退出”')
+                directive = RenderTemplate(bodyTemplate)
                 return {
-                    'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
-                    'card': tcard
+                    'directives': [directive],
+                    'outputSpeech': r'恭喜你，完成了本轮游戏，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出'
                 }
+
             else:
 
                 pos = random.randint(0, 87)

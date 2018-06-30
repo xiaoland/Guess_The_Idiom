@@ -240,7 +240,7 @@ class guess(Bot):
                 self.setSessionAttribute("lerror_num", json.dumps(0), '0')
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，你真棒！让我们继续吧',
+                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + guaqia_num + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            
@@ -268,7 +268,7 @@ class guess(Bot):
                     self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
                     self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
                     return {
-                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不过您已经闯到了' + str(int(guanqia_num) - 1) + '让我们继续吧',
                         'card': card
                     }
                 else:

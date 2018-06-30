@@ -374,7 +374,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们进入' + guanqia_num + 1 '题吧'
+            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们进入' + str(guanqia_num + 1)  + '题吧'
         }
     
     def nidiom(self):

@@ -268,7 +268,7 @@ class guess(Bot):
 
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(int(guanqia_num) + 0) + '关，加油！让我们继续吧',
+                    'outputSpeech': r'恭喜你答对了，您已经闯过了第' + str(int(guanqia_num) + 0) + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            
@@ -316,7 +316,7 @@ class guess(Bot):
                     card.addCueWords(r'我觉得答案是......')
 
                     return {
-                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num + 0) + '让我们继续吧',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯过了' + str(guanqia_num + 0) + '让我们继续吧',
                         'card': card
                     }
                 elif int(lerror_num) < 4:
@@ -374,7 +374,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们进入' + str(guanqia_num + 1)  + '题吧'
+            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们进入第' + str(guanqia_num + 1)  + '题吧'
         }
     
     def nidiom(self):

@@ -7,6 +7,7 @@
 
 import random
 from dueros.Bot import Bot
+import json
 
 from dueros.directive.Display.RenderTemplate import RenderTemplate
 from dueros.directive.Display.template.BodyTemplate1 import BodyTemplate1
@@ -198,11 +199,22 @@ class guess(Bot):
         # -----fix by sunshaolei------
 
         pos = int(self.getSessionAttribute("pos", 0))
+
+
         guanqia_num = int(self.getSessionAttribute("guanqia_num", 0))
         lun_num = int(self.getSessionAttribute("lun_num", 0))
         error_num = int(self.getSessionAttribute("error_num", 0))
         lerror_num = int(self.getSessionAttribute("lerror_num", 0))
-        answer = self.getSlots('sys.idiom')
+
+        result = self.getSlots('idiom')
+        try:
+            answer = json.loads(result)
+            answer = answer.get("origin")
+        except:
+            answer = result
+
+        print(repr(answer))
+        print(repr(self.imageurl[pos][0]))
         card = ImageCard()
         card.addItem(self.imageurl[pos][1])
         card.addCueWords(r'我觉得答案是......')
@@ -230,15 +242,18 @@ class guess(Bot):
                 }
             else:
 
-                pos = random.randint(87)
+                pos = random.randint(0, 87)
 
                 self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)    # 关卡加一
                 self.setSessionAttribute("lun_num", lun_num, 0)
-                self.setSessionAttribute("pos", self.imageurl[pos][0], '')
+                self.setSessionAttribute("pos", pos, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)
                 guanqia_num = self.getSessionAttribute("guanqia_num", 0)
 
+                card = ImageCard()
                 card.addItem(self.imageurl[pos][1])
+                card.addCueWords(r'我觉得答案是......')
+                card.addCueWords(r'我认为答案是......')
 
                 self.waitAnswer()
                 return {
@@ -271,12 +286,10 @@ class guess(Bot):
                     self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)  # 关卡加一
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧',
-                        'card': card
                     }
                 else:
                     self.setSessionAttribute("lerror_num", lerror_num + 1, 0)
                     return {
-                        'card': card,
                         'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
@@ -337,7 +350,7 @@ class guess(Bot):
         self.setSessionAttribute("guanqia_num", 0, 0)
         self.setSessionAttribute("error_num", 0, 0)
         self.setSessionAttribute("lerror_num", 0, 0)
-        self.setSessionAttribute("pos", self.imageurl[rand_ids][0], '')
+        self.setSessionAttribute("pos", rand_ids, 0)
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('我觉得答案是......')

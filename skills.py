@@ -204,7 +204,8 @@ class guess(Bot):
         lerror_num = int(self.getSessionAttribute("lerror_num", 0))
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
-        card.addItem(self.imageurl[pos][1])
+        rand_ids = random.randint(0,87)
+        card.addItem(self.imageurl[rand_ids][1]) # 新的关卡图片准备
         card.addCueWords(r'我觉得答案是......')
         card.addCueWords(r'我认为答案是......')
         if not answer:
@@ -230,15 +231,11 @@ class guess(Bot):
                 }
             else:
 
-                pos = random.randint(87)
-
                 self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)    # 关卡加一
                 self.setSessionAttribute("lun_num", lun_num, 0)
-                self.setSessionAttribute("pos", self.imageurl[pos][0], '')
+                self.setSessionAttribute("pos", self.imageurl[rand_ids][0], '')
                 self.setSessionAttribute("lerror_num", 0, 0)
                 guanqia_num = self.getSessionAttribute("guanqia_num", 0)
-
-                card.addItem(self.imageurl[pos][1])
 
                 self.waitAnswer()
                 return {
@@ -276,7 +273,6 @@ class guess(Bot):
                 else:
                     self.setSessionAttribute("lerror_num", lerror_num + 1, 0)
                     return {
-                        'card': card,
                         'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
@@ -306,21 +302,22 @@ class guess(Bot):
     
     def cidiom(self):
         
-        pos = random.randint(0,87)
+        rand_ids = random.randint(0,87)
         guanqia_num = int(self.getSessionAttribute("guanqia_num", 0))
         lun_num = int(self.getSessionAttribute("lun_num", 0))
         error_num = int(self.getSessionAttribute("error_num", 0))
         pos = self.getSessionAttribute("pos", '')
+        
         if guanqia_num > 9:
             self.setSessionAttribute("lun_num", lun_num + 1, 0)
             self.setSessionAttribute("guanqia_num", 0, 0)
         else:
             self.setSessionAttribute("lun_num", lun_num, 0)
             self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)
-
-        self.setSessionAttribute("pos", pos, 0)
+        
+        self.setSessionAttribute("pos", rand_ids, 0)
         card = ImageCard()
-        card.addItem(self.imageurl[pos][1])
+        card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('我觉得答案是......')
         card.addCueWords('（你的成语答案）')
         card.addCueWords('我需要帮助/我不知道答案')

@@ -166,8 +166,8 @@ class guess(Bot):
         
         self.setSessionAttribute("pos", pos, 0)  # 存储当前正在出现的图片的答案
         self.setSessionAttribute("error_num", 0, 0)  # 存储当前使用者错误次数
-        self.setSessionAttribute("guanqia_num", 1, 0)  # 存储当前使用者关卡
-        self.setSessionAttribute("lun_num", 0, 0)  # 存储当前使用者关卡
+        self.setSessionAttribute("guanqia_num", 1, 1)  # 存储当前使用者关卡
+        self.setSessionAttribute("lun_num", 1, 1)  # 存储当前使用者关卡
         self.setSessionAttribute("lerror_num", 0, 3)
         card = ImageCard()
         card.addItem(self.imageurl[pos][1])

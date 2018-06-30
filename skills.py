@@ -5,11 +5,6 @@
 # author:xiaoland,sunshaolei
 # create_time: 2018/6/1
 
-import os
-import sys
-import json
-import requests
-import json
 import random
 from dueros.Bot import Bot
 
@@ -28,6 +23,9 @@ class guess(Bot):
         
         super().__init__(data)
         #fix by sunshaolei 不需要再初始化的时候就随机数，这样每次请求都会重新随机，效率低而且可能随机到重复的(code:random.randint(0:67))
+
+        self.waitAnswer()
+
         self.addLaunchHandler(self.launchRequest)
         self.addIntentHandler('welcome', self.welcome)
         self.addIntentHandler('idiom', self.idiom)
@@ -165,11 +163,11 @@ class guess(Bot):
 
         rand_ids = random.randint(0,87)
         
-        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), json.dumps(0))  # 存储当前正在出现的图片的答案
-        self.setSessionAttribute("error_num", json.dumps(0), json.dumps(0))  # 存储当前使用者错误次数
-        self.setSessionAttribute("guanqia_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
-        self.setSessionAttribute("lun_num", json.dumps(0), json.dumps(0))  # 存储当前使用者关卡
-        self.setSessionAttribute("lerror_num", json.dumps(0), json.dumps(0))
+        self.setSessionAttribute("pos", self.imageurl[rand_ids][0], '')  # 存储当前正在出现的图片的答案
+        self.setSessionAttribute("error_num", 0, 0)  # 存储当前使用者错误次数
+        self.setSessionAttribute("guanqia_num", 0, 0)  # 存储当前使用者关卡
+        self.setSessionAttribute("lun_num", 0, 0)  # 存储当前使用者关卡
+        self.setSessionAttribute("lerror_num", 0, 0)
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords(r'我觉得答案是......')
@@ -199,11 +197,11 @@ class guess(Bot):
 
         # -----fix by sunshaolei------
 
-        pos = json.loads(self.getSessionAttribute("pos", '0'))
-        guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
-        lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        error_num = json.loads(self.getSessionAttribute("error_num", '0'))
-        lerror_num = json.loads(self.getSessionAttribute("lerror_num", '0'))
+        pos = self.getSessionAttribute("pos", '')
+        guanqia_num = int(self.getSessionAttribute("guanqia_num", 0))
+        lun_num = int(self.getSessionAttribute("lun_num", 0))
+        error_num = int(self.getSessionAttribute("error_num", 0))
+        lerror_num = int(self.getSessionAttribute("lerror_num", 0))
         answer = self.getSlots('sys.idiom')
         card = ImageCard()
         np = random.randint(0,87)
@@ -222,11 +220,11 @@ class guess(Bot):
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if int(guanqia_num) > 9:
-                self.setSessionAttribute("guanqia_num", json.dumps(0), '0')    # 关卡加一
-                self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0')
-                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
-                self.setSessionAttribute("error_num", json.dumps(0), '0')
+            if guanqia_num > 9:
+                self.setSessionAttribute("guanqia_num", 0, 0)    # 关卡加一
+                self.setSessionAttribute("lun_num", lun_num + 1, 0)
+                self.setSessionAttribute("lerror_num", 0, 0)
+                self.setSessionAttribute("error_num", 0, 0)
                 tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                 return {
                     'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
@@ -234,22 +232,22 @@ class guess(Bot):
                 }
             else:
 
-                self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')    # 关卡加一
-                self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')
-                self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
-                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
+                self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)    # 关卡加一
+                self.setSessionAttribute("lun_num", lun_num, 0)
+                self.setSessionAttribute("pos", self.imageurl[np][0], '')
+                self.setSessionAttribute("lerror_num", 0, 0)
                 self.waitAnswer()
                 return {
                     'outputSpeech': r'恭喜你答对了，你真棒！让我们继续吧',
                     'card': card
                 }
         else:            
-            if int(guanqia_num) > 9:
-                self.setSessionAttribute("guanqia_num", json.dumps(0), '0')  # 关卡设为零
-                self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0') # 轮数加一
-                self.setSessionAttribute("error_num", json.dumps(0), '0')
-                self.setSessionAttribute("lerror_num", json.dumps(0), '0')
-                if int(lerror_num) > 2:
+            if guanqia_num > 9:
+                self.setSessionAttribute("guanqia_num", 0, 0)  # 关卡设为零
+                self.setSessionAttribute("lun_num", lun_num + 1, 0) # 轮数加一
+                self.setSessionAttribute("error_num",  0, 0)
+                self.setSessionAttribute("lerror_num",  0, 0)
+                if lerror_num > 2:
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续',
                         'card': card
@@ -257,41 +255,44 @@ class guess(Bot):
                 else:
                     tcard = (r'恭喜你，完成了本轮游戏，一共十道题，您答错了：' + str(error_num) + r'本题的答案是：' + pos + r'，你很棒棒哦，想要进入下一轮请说：“下一轮”，需要退出请说：“退出”')
                     return {
+                        'outputSpeech': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
                         'reprompt': r'恭喜你，完成了本轮游戏，想要进入下一轮请说，下一轮，需要退出请说，退出，',
                         'card': tcard
                     }
             else:
 
-                self.setSessionAttribute("lun_num", json.dumps(lun_num), '0')  #轮数不变
+                self.setSessionAttribute("lun_num", lun_num, 0)  #轮数不变
                 self.waitAnswer()
-                if int(lerror_num) > 2:
-                    self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')  # 关卡加一
-                    self.setSessionAttribute("pos", json.dumps(self.imageurl[np][0]), '0')
+                if lerror_num > 2:
+                    self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)  # 关卡加一
+                    self.setSessionAttribute("pos", self.imageurl[np][0], '')
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + pos + '，不要气馁，让我们继续吧',
                         'card': card
                     }
                 else:
-                    self.setSessionAttribute("lerror_num", json.dumps(int(lerror_num) + 1), '0')
+                    self.setSessionAttribute("lerror_num", lerror_num + 1, 0)
                     return {
+                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
 
     def quesheng(self):
 
-        error_num = json.loads(self.getSessionAttribute("error_num", '0'))    # 获取错误次数
-        self.setSessionAttribute("error_num", json.dumps(error_num + 1), '0')   # 增加错误次数
+        error_num = int(self.getSessionAttribute("error_num", 0))    # 获取错误次数
+        self.setSessionAttribute("error_num", error_num + 1, 0)   # 增加错误次数
 
         self.waitAnswer()
         return {
-            'outputSpeech': r'抱歉，我没有理解您的意思'
+            'outputSpeech': r'再努力想想吧，需要帮助可以说，我需要帮助',
+            'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助',
         }
     
     def howlg(self):
         
-        l = json.loads(self.getSessionAttribute("lun_num", '0'))
-        g = json.loads(self.getSessionAttribute("guanqia_num", '0'))
+        l = int(self.getSessionAttribute("lun_num", 0))
+        g = int(self.getSessionAttribute("guanqia_num", 0))
         card = TextCard(r'您现在在第' + str(l) + r'轮' + r'第' + str(g) + r'关')
         self.waitAnswer()
         return {
@@ -302,17 +303,17 @@ class guess(Bot):
     def cidiom(self):
         
         rand_ids = random.randint(0,87)
-        guanqia_num = json.loads(self.getSessionAttribute("guanqia_num", '0'))
-        lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        error_num = json.loads(self.getSessionAttribute("error_num", '0'))
-        pos = json.loads(self.getSessionAttribute("pos", '0'))
-        if int(guanqia_num) > 9:
-            self.setSessionAttribute("lun_num", json.dumps(int(lun_num) + 1), '0')
-            self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
+        guanqia_num = int(self.getSessionAttribute("guanqia_num", 0))
+        lun_num = int(self.getSessionAttribute("lun_num", 0))
+        error_num = int(self.getSessionAttribute("error_num", 0))
+        pos = self.getSessionAttribute("pos", '')
+        if guanqia_num > 9:
+            self.setSessionAttribute("lun_num", lun_num + 1, 0)
+            self.setSessionAttribute("guanqia_num", 0, 0)
         else:
-            self.setSessionAttribute("lun_num", json.dumps(int(lun_num)), '0')
-            self.setSessionAttribute("guanqia_num", json.dumps(int(guanqia_num) + 1), '0')
-        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
+            self.setSessionAttribute("lun_num", lun_num, 0)
+            self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)
+        self.setSessionAttribute("pos", self.imageurl[rand_ids][0], '')
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('我觉得答案是......')
@@ -327,11 +328,11 @@ class guess(Bot):
     def nidiom(self):
         
         rand_ids = random.randint(0,87)
-        lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
-        self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
-        self.setSessionAttribute("error_num", json.dumps(0), '0')
-        self.setSessionAttribute("lerror_num", json.dumps(0), '0')
-        self.setSessionAttribute("pos", json.dumps(self.imageurl[rand_ids][0]), '0')
+        lun_num = int(self.getSessionAttribute("lun_num", 0))
+        self.setSessionAttribute("guanqia_num", 0, 0)
+        self.setSessionAttribute("error_num", 0, 0)
+        self.setSessionAttribute("lerror_num", 0, 0)
+        self.setSessionAttribute("pos", self.imageurl[rand_ids][0], '')
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('我觉得答案是......')
@@ -360,9 +361,9 @@ class guess(Bot):
         }
         
     def answerunknow(self):
-        
+        self.waitAnswer()
         number = random.randint(2,4)
-        pos = json.loads(self.getSessionAttribute("pos", '0'))
+        pos = self.getSessionAttribute("pos", '')
         ra = pos
         if number == 2:
             card = TextCard('上官，答案的第一个字是' + ra[0])

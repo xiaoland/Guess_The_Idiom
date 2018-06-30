@@ -227,7 +227,7 @@ class guess(Bot):
 
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
-            if guanqia_num > 9:
+            if guanqia_num >= 9:
                 self.setSessionAttribute("guanqia_num", 0, 0)    # 关卡加一
                 self.setSessionAttribute("lun_num", lun_num + 1, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)
@@ -258,7 +258,7 @@ class guess(Bot):
                     'card': card
                 }
         else:            
-            if guanqia_num > 9:
+            if guanqia_num >= 9:
                 self.setSessionAttribute("guanqia_num", 0, 0)  # 关卡设为零
                 self.setSessionAttribute("lun_num", lun_num + 1, 0) # 轮数加一
                 self.setSessionAttribute("error_num",  0, 0)
@@ -297,7 +297,6 @@ class guess(Bot):
                     card = ImageCard()
                     card.addItem(self.imageurl[new_pos][1])
                     card.addCueWords(r'我觉得答案是......')
-                    card.addCueWords(r'我认为答案是......')
 
                     return {
                         'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧',

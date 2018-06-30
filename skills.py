@@ -228,7 +228,7 @@ class guess(Bot):
 
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
             if guanqia_num >= 9:
-                self.setSessionAttribute("guanqia_num", 0, 0)    # 关卡加一
+                self.setSessionAttribute("guanqia_num", 1, 0)    # 关卡加一
                 self.setSessionAttribute("lun_num", lun_num + 1, 0)
                 self.setSessionAttribute("lerror_num", 0, 0)
                 self.setSessionAttribute("error_num", 0, 0)
@@ -268,12 +268,12 @@ class guess(Bot):
 
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(guanqia_num + 1) + '关，加油！让我们继续吧',
+                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(int(guanqia_num) + 0) + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            
             if guanqia_num >= 10:
-                self.setSessionAttribute("guanqia_num", 0, 0)  # 关卡设为零
+                self.setSessionAttribute("guanqia_num", 1, 0)  # 关卡设为零
                 self.setSessionAttribute("lun_num", lun_num + 1, 0) # 轮数加一
                 self.setSessionAttribute("error_num",  0, 0)
                 self.setSessionAttribute("lerror_num",  0, 0)
@@ -316,7 +316,7 @@ class guess(Bot):
                     card.addCueWords(r'我觉得答案是......')
 
                     return {
-                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num + 0) + '让我们继续吧',
                         'card': card
                     }
                 elif int(lerror_num) < 4:
@@ -365,6 +365,7 @@ class guess(Bot):
             self.setSessionAttribute("guanqia_num", guanqia_num + 1, 0)
         
         self.setSessionAttribute("pos", rand_ids, 0)
+        self.setSessionAttribute("error_num", error_num + 1, 0)
         card = ImageCard()
         card.addItem(self.imageurl[rand_ids][1])
         card.addCueWords('我觉得答案是......')
@@ -373,7 +374,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们继续吧'
+            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们进入' + guanqia_num + 1 '题吧'
         }
     
     def nidiom(self):

@@ -322,6 +322,7 @@ class guess(Bot):
     
     def nidiom(self):
         
+        rand_ids = random.randint(0,87)
         lun_num = json.loads(self.getSessionAttribute("lun_num", '0'))
         self.setSessionAttribute("guanqia_num", json.dumps(0), '0')
         self.setSessionAttribute("error_num", json.dumps(0), '0')

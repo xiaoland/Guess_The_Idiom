@@ -324,15 +324,15 @@ class guess(Bot):
                 elif int(lerror_num) < 4:
                     self.setSessionAttribute("lerror_num", int(lerror_num) + 1, 0)
                     return {
-                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 0),
+                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
 
     def quesheng(self):
 
-        error_num = int(self.getSessionAttribute("error_num", 0))    # 获取错误次数
-        self.setSessionAttribute("error_num", error_num + 1, 0)   # 增加错误次数
+        error_num = int(self.getSessionAttribute("lerror_num", 0))    # 获取错误次数
+        self.setSessionAttribute("lerror_num", error_num + 1, 0)   # 增加错误次数
 
         self.waitAnswer()
         return {

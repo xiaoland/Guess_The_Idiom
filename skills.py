@@ -36,7 +36,7 @@ class guess(Bot):
         self.addIntentHandler('ai.dueros.common.default_intent', self.quesheng)
         self.imageurl = [
             ['支离破碎', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E6%94%AF%E7%A6%BB%E7%A0%B4%E7%A2%8E.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A55Z%2F-1%2F%2Fb34d00a868a863f4a2f5e5079564082f5fe84fedc985c0460bec7136d26ef0ab'],
-            ['重蹈复辙', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E9%87%8D%E8%B9%88%E8%A6%86%E8%BE%99.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A57Z%2F-1%2F%2F313be2b8aed3acd3add552259087cbfd44f94433de25b392b8200b8ff6528566'],
+            ['重蹈覆辙', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E9%87%8D%E8%B9%88%E8%A6%86%E8%BE%99.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A57Z%2F-1%2F%2F313be2b8aed3acd3add552259087cbfd44f94433de25b392b8200b8ff6528566'],
             ['一石二鸟', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E4%B8%80%E7%9F%B3%E4%BA%8C%E9%B8%9F.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A50Z%2F-1%2F%2Fe67712a139d93b7bd0edfd717fbcf5695059157f80762511e49abaa4742ec54d'],
             ['一叶障目', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E4%B8%80%E5%8F%B6%E9%9A%9C%E7%9B%AE.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A52Z%2F-1%2F%2F8783bf1fc817a358befcb275862d3f5cf2bca5f6fed635f4b21c7b7f8b69358a'],
             ['一帆风顺', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E4%B8%80%E5%B8%86%E9%A3%8E%E9%A1%BA.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A32%3A51Z%2F-1%2F%2F45464eabffbaed1b21d81230b2936ed879ea96c2ddc291f35377c733a881d0b0'],
@@ -132,10 +132,14 @@ class guess(Bot):
         :return:
         """
         
-        card = TextCard('说出“开始猜成语”即可开始看图猜成语')
+        bodyTemplate = BodyTemplate1()
+        bodyTemplate.setBackGroundImage('http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%9B%AE%E4%B8%8D%E8%AF%86%E4%B8%81.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A48Z%2F-1%2F%2F454b61cd89235a7248857bb018c3927f82b94bb8ba19de6ecc7e318247f5a7b3')
+        bodyTemplate.setTitle('看图猜成语')
+        bodyTemplate.setPlainTextContent('准备好了了以后，说出“开始猜成语”即可开始游戏')
+        directive = RenderTemplate(bodyTemplate)
         return {
-            'card': card,
-            'outputSpeech': r'你准备好了吗，我们一起猜成语吧'
+            'directives': [directive],
+            'outputSpeech': '准备好了了以后，说出，开始猜成语，即可开始游戏'
         }
 
 

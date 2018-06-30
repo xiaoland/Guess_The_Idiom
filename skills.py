@@ -61,9 +61,9 @@ class guess(Bot):
             ['穷困潦倒', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%A9%B7%E5%9B%B0%E6%BD%A6%E5%80%92.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A55Z%2F-1%2F%2Ff1b6090bebac853513d43f7632b55c13f6e7cf75fbe8a8d4d29a065daff6508e'],
             ['破口大骂', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%A0%B4%E5%8F%A3%E5%A4%A7%E9%AA%82.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A51Z%2F-1%2F%2F0e0eb242713965db213344402015c6a49bef9d16ddd03a540fa7fab859e07701'],
             ['天外有天', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%A4%A9%E5%A4%96%E6%9C%89%E5%A4%A9.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A33Z%2F-1%2F%2Fe22e790e3cf25550a93f7a78cc1bfd257c12b8bc1442edac9546055b7ca07797'],
-            ['表里如一', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%99%BE%E9%87%8C%E6%8C%91%E4%B8%80.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-26T15%3A16%3A11Z%2F-1%2F%2Fed5e0e6d3d42ac90aa31f83b9ec9da7f2a6c16da95acdb8e23623e4bd7e7a73b'],
+            ['表里如一', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E8%A1%A8%E9%87%8C%E5%A6%82%E4%B8%80.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-26T15%3A16%3A12Z%2F-1%2F%2Fba70cfca1477e9d77f3a73c43e3ed4a647b7cecf68859d0e6370ef2dc0b89d22'],
             ['杀鸡取卵', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E6%9D%80%E9%B8%A1%E5%8F%96%E5%8D%B5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A07Z%2F-1%2F%2F2c674d176675072db9dfede60d6d316822743b3a2aa6773a598c902fe5e433f8'],
-            ['横冲直撞', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E8%8B%A5%E9%9A%90%E8%8B%A5%E7%8E%B0.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A05Z%2F-1%2F%2F023d110931b935b1311bfd846d8494866cf159c726aaabb669bd4f903fa0bb39'],
+            ['横冲直撞', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E6%A8%AA%E5%86%B2%E7%9B%B4%E6%92%9E.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-26T15%3A20%3A02Z%2F-1%2F%2Fdd7f7b6f5456f85602b63b515d5badf171280dd2fe2c49ae3c0db19bf27dafb0'],
             ['前赴后继', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%89%8D%E4%BB%86%E5%90%8E%E7%BB%A7.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A52Z%2F-1%2F%2F8caba59d3f424f80d8b87546d4bc85213160b9423b9efa758cd6b6b10aa56e5a'],
             ['对牛谈琴', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%AF%B9%E7%89%9B%E5%BC%B9%E7%90%B4.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-26T15%3A17%3A06Z%2F-1%2F%2Fd602b8077505b0505532d48c13e8a07ef16d842fa62a94c58b13c3dab5cac852'],
             ['东张西望', 'http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E4%B8%9C%E5%BC%A0%E8%A5%BF%E6%9C%9B.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-26T15%3A17%3A06Z%2F-1%2F%2F268f83d06ef15b74cf1b58ea0ccd42a0d34530af366f71d4e2c28bacbfd96db9'],
@@ -276,24 +276,11 @@ class guess(Bot):
 
     def quesheng(self):
 
-        # ---fix by sunshaolei---
-        # num = open("./num.txt", "r")
-        # gs = num.read(7)
-        # c = gs[-1]
-        # g = gs[-2]
-        # l = gs[-3]
-        # num.close()
-        # num = open("./num.txt", "w")
-        # num.write(self.imageurl[self.number][0] + l + g + c)
-        # num.close()
-        # ---fix by sunshaolei---
-
         error_num = json.loads(self.getSessionAttribute("error_num", '0'))    # 获取错误次数
         self.setSessionAttribute("error_num", json.dumps(error_num + 1), '0')   # 增加错误次数
 
         self.waitAnswer()
         return {
-            'card': TextCard('抱歉，我没有理解您的意思'),
             'outputSpeech': r'抱歉，我没有理解您的意思'
         }
     
@@ -348,7 +335,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'好的，让我们进入下一轮'
+            'outputSpeech': r'好的，让我们进入第' + str(lun_num) + '轮'
         }
     
     def welcome(self):

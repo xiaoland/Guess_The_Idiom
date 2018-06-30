@@ -239,7 +239,7 @@ class guess(Bot):
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
-                        'outputSpeech': r'你太棒了，全部都答对了，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出。'
+                        'outputSpeech': r'你太棒了，全部都答对了，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出'
                     }
                 else:
                 
@@ -249,7 +249,7 @@ class guess(Bot):
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
-                        'outputSpeech': r'你太棒了，全部都答对了，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出。'
+                        'outputSpeech': r'你太棒了，全部都答对了，说出“下一轮”即可进入第' + str(int(lun_num) + 1) + '轮，如需退出，请说，退出'
                     }
 
             else:
@@ -269,7 +269,7 @@ class guess(Bot):
 
                 self.waitAnswer()
                 return {
-                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(int(guanqia_num) + 1) + '关，加油！让我们继续吧。',
+                    'outputSpeech': r'恭喜你答对了，您已经闯到了第' + str(int(guanqia_num) + 0) + '关，加油！让我们继续吧',
                     'card': card
                 }
         else:            
@@ -285,7 +285,7 @@ class guess(Bot):
                     directive = RenderTemplate(bodyTemplate)
                     return {
                         'directives': [directive],
-                        'outputSpeech': '这一题的答案是' + self.imageurl[pos][0] + '不过你很棒棒哦，一共十道题，您答对了：' + str(10 - error_num) + r'题，说出，下一轮，即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说，退出。'
+                        'outputSpeech': '这一题的答案是' + self.imageurl[pos][0] + '不过你很棒棒哦，一共十道题，您答对了：' + str(10 - error_num) + r'题，说出，下一轮，即可进入第' + str(int(lun_num) + 1) + '轮，需要退出请说，退出，'
                     }
                     
                 else:
@@ -297,7 +297,7 @@ class guess(Bot):
                     card.addItem(self.imageurl[new_pos][1])
 
                     return {
-                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不要气馁，让我们继续。',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不要气馁，让我们继续吧',
                         'card': card
                     }
             else:
@@ -317,13 +317,13 @@ class guess(Bot):
                     card.addCueWords(r'我觉得答案是......')
 
                     return {
-                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧。',
+                        'outputSpeech': r'好遗憾，还是答错了，正确答案是：' + self.imageurl[pos][0] + '，不过您已经闯到了' + str(guanqia_num - 1) + '让我们继续吧',
                         'card': card
                     }
                 elif int(lerror_num) < 4:
                     self.setSessionAttribute("lerror_num", int(lerror_num) + 1, 0)
                     return {
-                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助。' % (lerror_num + 1),
+                        'outputSpeech': r'你已经答错了%d次了，再努力想想吧，需要帮助可以说，我需要帮助' % (lerror_num + 1),
                         'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助'
                     }
 
@@ -335,7 +335,7 @@ class guess(Bot):
 
         self.waitAnswer()
         return {
-            'outputSpeech': r'再努力想想吧，需要帮助可以说，我需要帮助。',
+            'outputSpeech': r'再努力想想吧，需要帮助可以说，我需要帮助',
             'reprompt': r'答错了哦，再努力想想吧，需要帮助可以说，我需要帮助',
         }
     
@@ -374,7 +374,7 @@ class guess(Bot):
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们继续吧。'
+            'outputSpeech': r'上一题的答案是' + self.imageurl[int(pos)][0] + '，好的，让我们继续吧'
         }
     
     def nidiom(self):
@@ -400,16 +400,16 @@ class guess(Bot):
         
         card = StandardCard()
         card.setTitle('看图猜成语引导')
-        card.setContent('说出，开始猜成语，或，我准备好了，即可开始看图猜成语。')
+        card.setContent('说出，开始猜成语，或，我准备好了，即可开始看图猜成语')
         card.setContent('想出答案以后：')
         card.setContent('说出：“我认为答案是......”或者“我觉得答案是......”')
-        card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示。')
-        card.setContent('成语图片由度秘事业部提供。')
+        card.setContent('当您真的想不出答案时，说出“我需要帮助”或者“我不知道答案”即可获得提示')
+        card.setContent('成语图片由度秘事业部提供')
         card.addCueWords('开始猜成语')
         self.waitAnswer()
         return {
             'card': card,
-            'outputSpeech': r'说出，开始猜成语，让我们开始猜成语吧。'
+            'outputSpeech': r'说出，开始猜成语，让我们开始猜成语吧'
         }
         
     def answerunknow(self):
@@ -430,10 +430,10 @@ class guess(Bot):
                 'outputSpeech': r'皇上，答案的前两个字是' + ra[0] + ra[1]
             }
         elif number == 4:
-            card = TextCard('诶呀，成语躲起来了，加油想一想吧。')
+            card = TextCard('诶呀，成语躲起来了，加油想一想吧')
             self.waitAnswer()
             return {
-                'outputSpeech': r'诶呀，成语躲起来了，加油想一想吧。'
+                'outputSpeech': r'诶呀，成语躲起来了，加油想一想吧'
             }
                            
 

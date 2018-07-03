@@ -17,7 +17,9 @@ def application(environ, start_response):
     try:
         method = environ.get('REQUEST_METHOD', 'HEAD')
         if method == "HEAD":
-            start_response('200 OK', [])
+            response_headers = [('Content-Type', 'application/json'),
+                                ('Content-Length', str(len("")))]
+            start_response('200 OK', response_headers)
             return [""]
     except:
         pass

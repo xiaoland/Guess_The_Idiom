@@ -20,7 +20,7 @@ def application(environ, start_response):
         response_headers = [('Content-Type', 'application/json'),
                                 ('Content-Length', str(len("")))]
         start_response('200 OK', response_headers)
-        return [""]
+        return ""
     else:
         try:
             request_body_size = int(environ.get('CONTENT_LENGTH', 0))

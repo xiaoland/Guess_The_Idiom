@@ -220,6 +220,7 @@ class guess(Bot):
         ]
 
     def launchRequest(self):
+
         """
         进入
         :return:
@@ -257,7 +258,7 @@ class guess(Bot):
         self.setSessionAttribute("error_num", 0, 0)  # 存储当前使用者错误次数
         self.setSessionAttribute("guanqia_num", 1, 1)  # 存储当前使用者关卡
         self.setSessionAttribute("lun_num", 1, 1)  # 存储当前使用者关卡
-        self.setSessionAttribute("lerror_num", 0, 3)
+        self.setSessionAttribute("lerror_num", 0, 3) # 存储轮错误
         card = ImageCard()
         card.addItem(self.imageurl[pos][1])
         card.addCueWords(r'我觉得答案是......')
@@ -270,6 +271,7 @@ class guess(Bot):
         }
 
     def answeridiom(self):
+        
         """
         回答，  建议函数名字和意图名字一致 这样方便查找
         :return:

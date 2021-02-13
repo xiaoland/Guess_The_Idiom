@@ -430,29 +430,36 @@ class GuessIdiom(Bot):
         game_mode = self.get_session_attribute("game_mode", "")
 
         if game_mode == "free_mode":
-            rand_ids = random.randint(0, 75)
-            round_id = int(self.get_session_attribute("round_id", 0))
-            lun_num = int(self.get_session_attribute("lun_num", 0))
-            error_num = int(self.get_session_attribute("error_num", 0))
-            pos = self.get_session_attribute("pos", "")
+            passed_pos = self.get_session_attribute("passed_pos", [])
+            round_id = self.get_session_attribute("round_id", 1)
 
-            if guanqia_num > 9:
-                self.set_session_attribute("lun_num", lun_num + 1, 0)
-                self.set_session_attribute("guanqia_num", 0, 0)
+            new_pos = random.randint(0, len(self.idiom_url_list))
+            if len(passed_pos) <= len(self.idiom_url_list):
+                while new_pos in passed_pos:
+                    new_pos = random.randint(0, len(self.idiom_url_list))
             else:
-                self.set_session_attribute("lun_num", lun_num, 0)
-                self.set_session_attribute("guanqia_num", guanqia_num + 1, 0)
+                return {
+                    "outputSpeech": "诶呀！这么厉害，一不小心就全部被你猜完啦！我已经没有更多了，谢谢你与我一同玩了这么久，下次再来吧！"
+                }
 
-            self.set_session_attribute("pos", rand_ids, 0)
-            self.set_session_attribute("error_num", error_num + 1, 0)
+            passed_pos.append(new_pos)
+            self.set_session_attribute("round_id", round_id+1, 0)  # 轮加一
+            self.set_session_attribute("pos", new_pos, 0)
+            self.set_session_attribute("round_error_num", 0, 0)
+            self.set_session_attribute("passed_pos", passed_pos, [])
+
             card = ImageCard()
-            card.add_item(self.idiom_url_list[rand_ids][1])
+            card.addItem(self.idiom_url_list[new_pos][1])
             card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
             self.wait_answer()
             return {
                 "card": card,
-                "outputSpeech": "好的，让我们进入第%s" + str(guanqia_num + 1) + "轮吧"
+                "outputSpeech": "好的，让我们进入第%s轮吧" % round_id+1
+            }
+        elif game_mode == "enrty_mode":
+            return {
+                "outputSpeech": "闯关模式是不可以跳过的哦，你个找漏洞的家伙"
             }
 
     def nidiom(self):

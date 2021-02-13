@@ -357,6 +357,7 @@ class GuessIdiom(Bot):
             if game_mode == "entry_mode":
                 if checkpoint_error_num + 1 > error_limit and round_error_num + 1 > 2:
                     self.log.add_log("exit entry mode because checkpoint_error_num is limit reached", 1)
+                    self.clear_user_lp_info()
                     self.end_session()
                     return {
                         "outputSpeech": "实在是太遗憾了！你已经在本关里猜错了%s次，请好好磨练自己，改日再来吧！——少年！（我好中二啊哈哈哈）"
@@ -674,12 +675,24 @@ class GuessIdiom(Bot):
         can_next_checkpoint = self.get_session_attribute("can_next_checkpoint", False)
 
         if can_next_checkpoint:
+            self.compute_ranking()
+
             checkpoint_id = self.get_session_attribute("checkpoint_id", 1)
             passed_pos = self.get_session_attribute("passed_pos", [])
 
-            new_pos = random.randint(0, len(self.idiom_url_list))
-            while new_pos in passed_pos:
+            if len(passed_pos) < len(self.idiom_url_list):
                 new_pos = random.randint(0, len(self.idiom_url_list))
+                while new_pos in passed_pos:
+                    new_pos = random.randint(0, len(self.idiom_url_list))
+            else:
+                template = BodyTemplate1()
+                template.set_background_image(self.commonly_used_image_url_list["entry_mode_pass"])
+                template.set_plain_text_content("恭喜魔鬼，你成功通关了「闯关模式」")
+                directive = RenderTemplate(template)
+                return {
+                    "directives": [directive],
+                    "outputSpeech": "我的上帝，你是什么魔鬼，闯关模式都被你攻略了！可以去隔壁了"
+                }
 
             passed_pos.append(new_pos)
             self.set_session_attribute("pos", new_pos, None)
@@ -706,10 +719,28 @@ class GuessIdiom(Bot):
         :return:
         """
         self.log.add_log("handle_exit: start", 1)
+        game_mode = self.get_session_attribute("game_mode", "")
+        if game_mode == "entry_mode":
+            self.compute_ranking()
         self.end_session()
         return {
             "outputSpeech": "好的呢，小的告退——，即便如此，您仍可以说继续游戏来加载上次记录的信息点"
         }
+
+    def clear_user_lp_info(self):
+
+        """
+        清空用户记录点
+        :return:
+        """
+        user_id = self.get_user_id()
+        self.log.add_log("clear user_id-%s's lp info" % user_id, 1)
+
+        user_data_list = os.listdir("./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data["leavePointInfo"] = None
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
 
 
 if __name__ == "__main__":

@@ -49,7 +49,7 @@ class GuessIdiom(Bot):
 
         self.add_launch_handler(self.handle_welcome)
         self.add_intent_handler("welcome", self.welcome)
-        self.add_intent_handler("idiom", self.idiom)
+        self.add_intent_handler("entry_mode", self.handle_entry_mode)
         self.add_intent_handler("c_idiom", self.cidiom)
         self.add_intent_handler("howlg", self.howlg)
         self.add_intent_handler("idiom_answer", self.answeridiom)
@@ -57,6 +57,7 @@ class GuessIdiom(Bot):
         self.add_intent_handler("answerhelp", self.answerunknow)
         self.add_intent_handler("nidiom", self.nidiom)
         self.add_intent_handler("ai.dueros.common.default_intent", self.quesheng)
+        self.add_display_element_selected(self.handle_selected)
 
     def handle_welcome(self):
 
@@ -72,10 +73,19 @@ class GuessIdiom(Bot):
 
         mode1 = ListTemplateItem()
         mode2 = ListTemplateItem()
-        mode1.set_plain_primary_text('p')
-        item.set_plain_secondary_text('s')
-        item.set_image('asfasdf')
-        listTemplate.add_item(item)
+        mode3 = ListTemplateItem()
+        mode1.set_plain_primary_text("闯关模式")
+        mode2.set_plain_primary_text("自由模式")
+        mode3.set_plain_primary_text("闯关排行榜")
+        mode1.set_image(self.commonly_used_image_url_list["entry_mode"])
+        mode1.set_image(self.commonly_used_image_url_list["free_mode"])
+        mode1.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
+        mode1.set_token("entry_mode")
+        mode2.set_token("free_mode")
+        mode3.set_token("entry_mode_ranking")
+        template.add_item(mode1)
+        template.add_item(mode2)
+        template.add_item(mode3)
 
         directive = RenderTemplate(template)
         return {
@@ -83,7 +93,27 @@ class GuessIdiom(Bot):
             "outputSpeech": r"请选择游戏模式，有不明白的可以像这样问我：小度小度，什么是闯关模式"
         }
 
-    def idiom(self):
+    def handle_selected(self, request_data):
+
+        """
+        处理请求被选中
+        :param request_data: 接收的数据
+        :return:
+        """
+        token = request_data["token"]
+        if token == "entry_mode":
+            self.handle_entry_mode()
+        elif token == "free_mode":
+            self.handle_free_mode()
+        elif token == "entry_mode_ranking":
+            self.entry_mode_ranking()
+        else:
+            return {
+                "outputSpeech": "wrong token! please contact the developer"
+            }
+
+
+    def handle_entry_mode(self):
         """
         开局，初始化
         :return:
@@ -99,25 +129,28 @@ class GuessIdiom(Bot):
 
         # ------------- fix by sunshaolei -------
 
-        pos = random.randint(0, 75)
+        pos = random.randint(0, len(self.idiom_url_list))
 
-        self.set_session_attribute("pos", pos, 0)  # 存储当前正在出现的图片的答案
-        self.set_session_attribute("error_num", 0, 0)  # 存储当前使用者错误次数
-        self.set_session_attribute("guanqia_num", 1, 1)  # 存储当前使用者关卡
-        self.set_session_attribute("lun_num", 1, 1)  # 存储当前使用者关卡
-        self.set_session_attribute("lerror_num", 0, 3) # 存储轮错误
+        self.set_session_attribute("pos", pos, None)  # 当前成语id
+        self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
+        self.set_session_attribute("round_id", 1, 1)  # 第几轮
+        self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
+        self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
+        self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
+        self.set_session_attribute("difficulty_level", 1, 1)  # 关卡难度级别
+        self.set_session_attribute("tips_limit", 3, 3) # 关卡提示次数限制
+        self.set_session_attribute("error_limit", 5, 5)  # 关卡错误次数限制
+
         card = ImageCard()
         card.addItem(self.idiom_url_list[pos][1])
-        card.addCueWords(r"我觉得答案是......")
-        card.addCueWords(r"（你的成语答案）")
-        card.addCueWords(r"我需要帮助/我不知道答案")
+        card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
         self.wait_answer()
         return {
             "card": card,
-            "outputSpeech": r"上官，请您过目"
+            "outputSpeech": r"上官——请看题"
         }
 
-    def answeridiom(self):
+    def handle_answer(self):
         
         """
         回答，  建议函数名字和意图名字一致 这样方便查找
@@ -135,26 +168,30 @@ class GuessIdiom(Bot):
 
         # -----fix by sunshaolei------
 
-        pos = int(self.get_session_attribute("pos", 0))
+        pos = int(self.get_session_attribute("pos", None))
+        if pos is None:
+            return {
+                "outputSpeech": "we meet an error here, please contact the developer and restart the skill"
+            }
 
-        guanqia_num = int(self.get_session_attribute("guanqia_num", 0))
-        lun_num = int(self.get_session_attribute("lun_num", 0))
-        error_num = int(self.get_session_attribute("error_num", 0))
-        lerror_num = int(self.get_session_attribute("lerror_num", 0))
+        checkpoint_num = int(self.get_session_attribute("checkpoint_id", 1))
+        round_id = int(self.get_session_attribute("round_id", 1))
+        round_error_num = int(self.get_session_attribute("round_error_num", 0))
+        checkpoint_error_num = int(self.get_session_attribute("checkpoint_error_num", 0))
+        error_limit = int(self.get_session_attribute("error_limit", 5))
 
         result = self.get_slots("idiom")
         try:
-            answer = json.loads(result)
-            answer = answer.get("origin")
+            user_answer = json.loads(result).get("origin")
         except:
-            answer = result
+            user_answer = result
+        real_answer = self.idiom_url_list[pos][0]
 
-        print(repr(answer))
-        print(repr(self.idiom_url_list[pos][0]))
+        print("user_answer", repr(user_answer))
+        print("real_answer", repr(real_answer))
 
-        if not answer:
-
-            self.nlu.ask("idiom")
+        if not user_answer:
+            self.ask("idiom")
             self.wait_answer()
             return {
                 "outputSpeech": r"您的答案是什么呢？"

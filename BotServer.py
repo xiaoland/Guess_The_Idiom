@@ -10,7 +10,7 @@
 """
 from cgi import parse_qs, escape
 import json
-from dueros.duerskills.skills import guess
+from handler import GuessIdiom
 
 def application(environ, start_response):
 
@@ -31,9 +31,9 @@ def application(environ, start_response):
         if not request_body:
             return ['未获取到请求数据']
 
-        bot = guess(request_body)
+        bot = GuessIdiom(request_body)
         #添加错误回调方法
-        bot.setCallBack(callback)
+        bot.set_callback(callback)
 
         #验证签名enableVerifyRequestSign  disableVerifyRequestSign 关闭验证签名
         # bot.initCertificate(environ).enableVerifyRequestSign()
@@ -53,4 +53,5 @@ def application(environ, start_response):
 
 
 def callback(data):
+    print("-------------------------------------")
     print(data)

@@ -11,9 +11,25 @@
 #  - 4、每完成一个成语，就会给出解释
 #  - 5、更精美的页面
 
+#   "leavePointInfo": {
+#     "game_mode": "",
+#     "passed_pos": [],
+#     "all_error_num": "",
+#     "used_tips_num": "",
+#     "checkpoint_id": "",
+#     "round_id": "",
+#     "error_limit": "",
+#     "tips_limit": "",
+#     "round_num": "",
+#     "can_next_checkpoint": "",
+#     "pos": "",
+#     "round_error_num": ""
+#   }
+
 
 import random
 import json
+import os
 
 from dueros.Bot import Bot
 from dueros.directive.Display.RenderTemplate import RenderTemplate
@@ -24,7 +40,6 @@ from dueros.directive.Display.template import ListTemplateItem
 from dueros.card.ImageCard import ImageCard
 from dueros.card.TextCard import TextCard
 
-
 from log import Log
 
 
@@ -34,9 +49,10 @@ class GuessIdiom(Bot):
 
         super(GuessIdiom, self).__init__(request_data)
         # fix by sunshaolei 不需要再初始化的时候就随机数，这样每次请求都会重新随机，效率低而且可能随机到重复的(code:random.randint(0:67))
-        
+
         self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r", encoding="utf-8"))
-        self.commonly_used_image_url_list = json.load(open("./data/json/commonly_used_image_url_list.json", "r", encoding="utf-8"))
+        self.commonly_used_image_url_list = json.load(
+            open("./data/json/commonly_used_image_url_list.json", "r", encoding="utf-8"))
         self.request_data = request_data
 
         self.log = Log()
@@ -65,6 +81,28 @@ class GuessIdiom(Bot):
         self.add_intent_handler("ai.dueros.common.default_intent", self.handle_default)
 
         self.add_display_element_selected(self.handle_selected)
+
+    def handle_introduce(self):
+
+        """
+        处理介绍意图
+        :return:
+        """
+        content = \
+            """
+        闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来
+        自由模式：没有关卡，想怎么猜怎么猜
+        排行榜：目前只支持闯关模式下的排行榜
+        每个成语只有3次机会猜，用完了就会视为错误
+        """
+        card = TextCard(content)
+        card.set_title("看图猜成语-简介")
+        card.add_cue_words(["返回"])
+        self.wait_answer()
+        return {
+            "card": card,
+            "outputSpeech": r"说出，返回，来回到模式选择页面"
+        }
 
     def handle_welcome(self):
 
@@ -148,12 +186,13 @@ class GuessIdiom(Bot):
         self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
         self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
         self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
-        self.set_session_attribute("tips_limit", 8, 8) # 关卡提示次数限制
+        self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
         self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
-        self.set_session_attribute("round_num", 10, 5) # 本关有多少轮
+        self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
         self.set_session_attribute("passed_pos", [pos], [])
         self.set_session_attribute("game_mode", "entry_mode", "")
         self.set_session_attribute("can_next_checkpoint", False, False)
+        self.set_session_attribute("all_error_num", 0, 0)
 
         card = ImageCard()
         card.addItem(self.idiom_url_list[pos][1])
@@ -165,7 +204,7 @@ class GuessIdiom(Bot):
         }
 
     def handle_answer(self):
-        
+
         """
         处理回答成语意图
         :return:
@@ -256,12 +295,12 @@ class GuessIdiom(Bot):
                         self.log.add_log("partially correct in one checkpoint", 1)
                         template.set_plain_text_content(
                             r"真棒，你答对了%s题，对我说'进入下一关'开始第" % (round_id - checkpoint_error_num) + "%s关，退出请说：'退出'" % (
-                                        checkpoint_id + 1))
+                                    checkpoint_id + 1))
                         directive = RenderTemplate(template)
                         return {
                             "directives": [directive],
                             "outputSpeech": r"真棒，你答对了%s题，对我说'进入下一关'开始第" % (
-                                        round_num - checkpoint_error_num) + "%s关，退出请说：'退出'" % (checkpoint_id + 1)
+                                    round_num - checkpoint_error_num) + "%s关，退出请说：'退出'" % (checkpoint_id + 1)
                         }
 
                 else:
@@ -316,7 +355,7 @@ class GuessIdiom(Bot):
             # 错误分支
             self.log.add_log("answer is fault", 1)
             if game_mode == "entry_mode":
-                if checkpoint_error_num+1 > error_limit and round_error_num+1 > 2:
+                if checkpoint_error_num + 1 > error_limit and round_error_num + 1 > 2:
                     self.log.add_log("exit entry mode because checkpoint_error_num is limit reached", 1)
                     self.end_session()
                     return {
@@ -335,16 +374,17 @@ class GuessIdiom(Bot):
 
                     template = BodyTemplate1()
                     template.set_background_image(self.commonly_used_image_url_list["checkpoint_summary_background"])
-                    if round_error_num+1 > 2:
-                        self.set_session_attribute("checkpoint_id", checkpoint_id + 1, 1) # 关卡加一
+                    if round_error_num + 1 > 2:
+                        self.set_session_attribute("checkpoint_id", checkpoint_id + 1, 1)  # 关卡加一
                         self.log.add_log("next round is allow now because round_error_num limit reached", 1)
                         template.set_plain_text_content(r"这题的答案是%s" % real_answer + "。一共十道题，您答对了%s题。对我说'下一关'即可开始第" % (
-                                    round_num - checkpoint_error_num) + "%s轮，退出请说：'退出'" % str(checkpoint_id + 1))
+                                round_num - checkpoint_error_num) + "%s轮，退出请说：'退出'" % str(checkpoint_id + 1))
                         directive = RenderTemplate(template)
                         return {
                             "directives": [directive],
                             "outputSpeech": r"这题的答案是%s" % real_answer + "。本关一共%s道题，您答对了%s题。对我说'下一关'即可开始第" % (
-                            round_num, (round_num - checkpoint_error_num)) + "%s轮，退出请说：'退出'" % str(checkpoint_id + 1)
+                                round_num, (round_num - checkpoint_error_num)) + "%s轮，退出请说：'退出'" % str(
+                                checkpoint_id + 1)
                         }
 
                     else:
@@ -366,7 +406,7 @@ class GuessIdiom(Bot):
                     # self.set_session_attribute("checkpoint_id", checkpoint_id, 0)  # 关卡不变
 
                     self.wait_answer()
-                    if round_error_num+1 > 2:
+                    if round_error_num + 1 > 2:
                         self.log.add_log("next round is allow now because round_error_num limit reached", 1)
                         new_pos = random.randint(0, len(self.idiom_url_list))
                         while new_pos in passed_pos:
@@ -393,7 +433,7 @@ class GuessIdiom(Bot):
                             "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助" % (3 - round_error_num)
                         }
             elif game_mode == "free_mode":
-                if round_error_num+1 > 2:
+                if round_error_num + 1 > 2:
                     new_pos = random.randint(0, len(self.idiom_url_list))
                     if len(passed_pos) <= len(self.idiom_url_list):
                         while new_pos in passed_pos:
@@ -411,7 +451,7 @@ class GuessIdiom(Bot):
                     self.set_session_attribute("round_error_num", 0, 0)
                     self.set_session_attribute("passed_pos", passed_pos, [])
                     self.set_session_attribute("checkpoint_error_num", checkpoint_error_num + 1, 0)
-                    self.set_session_attribute("all_error_num", all_error_num+1, 0)
+                    self.set_session_attribute("all_error_num", all_error_num + 1, 0)
 
                     card = ImageCard()
                     card.addItem(self.idiom_url_list[new_pos][1])
@@ -435,7 +475,7 @@ class GuessIdiom(Bot):
         """
 
         round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
-        self.set_session_attribute("round_error_num", round_error_num+1, 0)  # 增加错误次数
+        self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
 
         self.wait_answer()
         return {
@@ -460,6 +500,7 @@ class GuessIdiom(Bot):
         """
         game_mode = self.get_session_attribute("game_mode", "")
 
+        self.wait_answer()
         if game_mode == "free_mode":
             passed_pos = self.get_session_attribute("passed_pos", [])
             round_id = self.get_session_attribute("round_id", 1)
@@ -476,7 +517,7 @@ class GuessIdiom(Bot):
                 }
 
             passed_pos.append(new_pos)
-            self.set_session_attribute("round_id", round_id+1, 0)  # 轮加一
+            self.set_session_attribute("round_id", round_id + 1, 0)  # 轮加一
             self.set_session_attribute("pos", new_pos, 0)
             self.set_session_attribute("round_error_num", 0, 0)
             self.set_session_attribute("passed_pos", passed_pos, [])
@@ -488,57 +529,89 @@ class GuessIdiom(Bot):
             self.wait_answer()
             return {
                 "card": card,
-                "outputSpeech": "好的，让我们进入第%s轮吧" % round_id+1
+                "outputSpeech": "好的，让我们进入第%s轮吧" % round_id + 1
             }
         elif game_mode == "enrty_mode":
             return {
                 "outputSpeech": "闯关模式是不可以跳过的哦，你个找漏洞的家伙"
             }
 
+    def handle_pause(self):
+
+        """
+        处理暂停意图：存储离开点
+        :return:
+        """
+        self.log.add_log("handle_pause: start", 1)
+        user_id = self.get_user_id()
+
+        self.wait_answer()
+        leave_point_info = {
+            "game_mode": self.get_session_attribute("game_mode", ""),
+            "passed_pos": self.get_session_attribute("passed_pos", []),
+            "all_error_num": self.get_session_attribute("all_error_num", 0),
+            "used_tips_num": self.get_session_attribute("used_tips_num", 0),
+            "checkpoint_id": self.get_session_attribute("checkpoint_id", 1),
+            "round_id": self.get_session_attribute("round_id", 1),
+            "error_limit": self.get_session_attribute("error_limit", 1),
+            "tips_limit": self.get_session_attribute("tips_limit", 1),
+            "round_num": self.get_session_attribute("round_num", 1),
+            "can_next_checkpoint": self.get_session_attribute("can_next_checkpoint", False),
+            "pos": self.get_session_attribute("pos", 0),
+            "round_error_num": self.get_session_attribute("round_error_num", 0)
+        }
+        user_data_list = os.listdir(r"./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+        else:
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data["user_id"] = user_id
+
+        user_data["leavePointInfo"] = leave_point_info
+        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w", encoding="utf-8"))
+
+        return {
+            "outputSpeech": "暂停完成！信息点已经记录"
+        }
+
     def handle_continue(self):
 
         """
-        处理继续意图
+        处理继续意图: 从离开的地方继续
         :return:
         """
+        self.log.add_log("handle_continue: start", 1)
 
-        rand_ids = random.randint(0, 75)
-        lun_num = int(self.get_session_attribute("lun_num", 0))
-        self.set_session_attribute("guanqia_num", 1, 0)
-        self.set_session_attribute("error_num", 0, 0)
-        self.set_session_attribute("lerror_num", 0, 0)
-        self.set_session_attribute("pos", rand_ids, 0)
-        card = ImageCard()
-        card.addItem(self.idiom_url_list[rand_ids][1])
-        card.addCueWords("我觉得答案是......")
-        card.addCueWords("（你的成语答案）")
-        card.addCueWords("我需要帮助/我不知道答案")
         self.wait_answer()
-        return {
-            "card": card,
-            "outputSpeech": r"好的，让我们进入第" + str(lun_num) + "轮"
-        }
+        output_speech = ""
+        user_id = self.get_user_id()
+        user_data_list = os.listdir(r"./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            if user_data["leavePointInfo"] is None:
+                self.log.add_log("user_id-%s does not pause ever to record LP info" % user_id, 2)
+                output_speech = "你还没有暂停过来存储信息呢！"
+            else:
+                lp_info = user_data["leavePointInfo"]
+                self.set_session_attribute("pos", lp_info["pos"], None)  # 当前成语id
+                self.set_session_attribute("checkpoint_id", lp_info["checkpoint_id"], 1)  # 第几关
+                self.set_session_attribute("round_id", lp_info["round_id"], 1)  # 第几轮
+                self.set_session_attribute("checkpoint_error_num", lp_info["checkpoint_error_num"], 0)  # 本关错误次数
+                self.set_session_attribute("round_error_num", lp_info["round_error_num"], 0)  # 本轮错误次数
+                self.set_session_attribute("used_tips_num", lp_info["used_tips_num"], 0)  # 本关使用的提示数
+                self.set_session_attribute("tips_limit", lp_info["tips_limit"], 8)  # 关卡提示次数限制
+                self.set_session_attribute("error_limit", lp_info["error_limit"], 6)  # 关卡错误次数限制
+                self.set_session_attribute("round_num", lp_info["round_num"], 5)  # 本关有多少轮
+                self.set_session_attribute("passed_pos", lp_info["passed_pos"], [])
+                self.set_session_attribute("game_mode", lp_info["game_mode"], "")
+                self.set_session_attribute("can_next_checkpoint", lp_info["can_next_checkpoint"], False)
+                self.set_session_attribute("all_error_num", lp_info["all_error_num"], 0)
+        else:
+            self.log.add_log("user_id-%s is not exist" % user_id, 2)
+            output_speech = "你还没有暂停过来存储信息呢！"
 
-    def handle_introduce(self):
-
-        """
-        处理介绍意图
-        :return:
-        """
-        content = \
-        """
-        闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来
-        自由模式：没有关卡，想怎么猜怎么猜
-        排行榜：目前只支持闯关模式下的排行榜
-        每个成语只有3次机会猜，用完了就会视为错误
-        """
-        card = TextCard(content)
-        card.set_title("看图猜成语-简介")
-        card.add_cue_words(["返回"])
-        self.wait_answer()
         return {
-            "card": card,
-            "outputSpeech": r"说出，返回，来回到模式选择页面"
+            "outputSpeech": output_speech
         }
 
     def handle_tips(self):
@@ -547,30 +620,97 @@ class GuessIdiom(Bot):
         处理提示
         :return:
         """
+        self.log.add_log("handle_tips: start", 1)
+        output_speech = ""
         self.wait_answer()
-        number = random.randint(2, 4)
+
+        game_mode = self.get_session_attribute("game_mode", "")
         pos = int(self.get_session_attribute("pos", 0))
-        ra = self.idiom_url_list[pos][0]
-        if number == 2:
-            card = TextCard("上官，答案的第一个字是" + ra[0])
+        used_tips_num = self.get_session_attribute("used_tips_num", 0)
+
+        real_answer = self.idiom_url_list[pos][0]
+
+        if game_mode == "free_mode":
+            number = random.randint(2, 4)
+            self.set_session_attribute("used_tips_num", used_tips_num + 1, 0)
+            if number == 2:
+                # card = TextCard("上官，答案的第一个字是%s" % real_answer[0])
+                output_speech = "上官，答案的第一个字是%s" % real_answer[0]
+            elif number == 3:
+                # card = TextCard("皇上，答案的前两个字是%s" % (real_answer[0] + real_answer[1]))
+                output_speech = "皇上，答案的前两个字是%s" % (real_answer[0] + real_answer[1])
+            elif number == 4:
+                # card = TextCard("诶呀，成语躲起来了，加油想一想吧")
+                output_speech = "诶呀！成语躲起来了，加油想一想吧"
+
+        elif game_mode == "entry_mode":
+            tips_limit = self.get_session_attribute("tips_limit", 0)
+
+            if used_tips_num <= tips_limit:
+                number = random.randint(2, 3)
+                remain_tips_num = tips_limit - used_tips_num
+                self.set_session_attribute("used_tips_num", used_tips_num + 1, 0)
+
+                if number == 2:
+                    output_speech = "上官，答案的第一个字是%s" % real_answer[0] + "。你还剩%s次提示机会" % remain_tips_num
+                elif number == 3:
+                    output_speech = "皇上，答案的前两个字是%s" % (
+                                real_answer[0] + real_answer[1]) + "。你还剩%s次提示机会" % remain_tips_num
+
+            else:
+                output_speech = "本关的提示使用次数已经用完了，送你一个'危'字"
+
+        return {
+            "outputSpeech": output_speech
+        }
+
+    def handle_next_checkpoint(self):
+
+        """
+        处理下一关意图
+        :return:
+        """
+        self.log.add_log("handle_next_checkpoint: start", 1)
+        can_next_checkpoint = self.get_session_attribute("can_next_checkpoint", False)
+
+        if can_next_checkpoint:
+            checkpoint_id = self.get_session_attribute("checkpoint_id", 1)
+            passed_pos = self.get_session_attribute("passed_pos", [])
+
+            new_pos = random.randint(0, len(self.idiom_url_list))
+            while new_pos in passed_pos:
+                new_pos = random.randint(0, len(self.idiom_url_list))
+
+            passed_pos.append(new_pos)
+            self.set_session_attribute("pos", new_pos, None)
+            self.set_session_attribute("passed_pos", passed_pos, [])
+
+            card = ImageCard()
+            card.add_item(self.idiom_url_list[new_pos][1])
+            card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
+
             self.wait_answer()
             return {
-                "outputSpeech": r"上官，答案的第一个字是" + ra[0]
+                "card": card,
+                "outputSpeech": "好的，让我们进入第%s关"%checkpoint_id
             }
-        elif number == 3:
-            card = TextCard("皇上，答案的前两个字是" + ra[0] + ra[1])
-            self.wait_answer()
+        else:
             return {
-                "outputSpeech": r"皇上，答案的前两个字是" + ra[0] + ra[1]
+                "outputSpeech": "Sir!你还不可以进入下一关呢！"
             }
-        elif number == 4:
-            card = TextCard("诶呀，成语躲起来了，加油想一想吧")
-            self.wait_answer()
-            return {
-                "outputSpeech": r"诶呀，成语躲起来了，加油想一想吧"
-            }
+
+    def handle_exit(self):
+
+        """
+        处理退出意图
+        :return:
+        """
+        self.log.add_log("handle_exit: start", 1)
+        self.end_session()
+        return {
+            "outputSpeech": "好的呢，小的告退——，即便如此，您仍可以说继续游戏来加载上次记录的信息点"
+        }
 
 
 if __name__ == "__main__":
     pass
-

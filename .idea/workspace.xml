@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a4ea3b78-f9d7-4d24-9d30-faa811d30dfa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BotServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/BotServer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dueros/samples/audio_play/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/json/commonly_used_image_url_list.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/json/commonly_used_image_url_list.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +77,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534169819098</updated>
-      <workItem from="1613196214781" duration="9289000" />
+      <workItem from="1613196214781" duration="19473000" />
     </task>
     <servers />
   </component>
@@ -102,10 +101,10 @@
       <screen x="1920" y="-811" width="1080" height="1880" />
     </state>
     <state width="1037" height="559" key="GridCell.Tab.0.right/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1613203395282" />
-    <state x="2123" y="-376" width="672" height="678" key="search.everywhere.popup" timestamp="1613205739281">
+    <state x="2123" y="-376" width="672" height="678" key="search.everywhere.popup" timestamp="1613214750605">
       <screen x="1920" y="-811" width="1080" height="1880" />
     </state>
-    <state x="2123" y="-376" width="672" height="678" key="search.everywhere.popup/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1613205739281" />
+    <state x="2123" y="-376" width="672" height="678" key="search.everywhere.popup/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1613214750605" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/IdiomGuessing$ListTemplate1.coverage" NAME="ListTemplate1 Coverage Results" MODIFIED="1613203379943" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="G:/Program/python-3.6/Lib/site-packages/dueros/directive/Display/template" />

@@ -305,9 +305,21 @@ class GuessIdiom(Bot):
 
                 else:
                     self.log.add_log("next round will be execute", 1)
-                    new_pos = random.randint(0, len(self.idiom_url_list))
-                    while new_pos in passed_pos:
+
+                    if len(passed_pos) < len(self.idiom_url_list):
                         new_pos = random.randint(0, len(self.idiom_url_list))
+                        while new_pos in passed_pos:
+                            new_pos = random.randint(0, len(self.idiom_url_list))
+                    else:
+                        template = BodyTemplate1()
+                        template.set_background_image(self.commonly_used_image_url_list["entry_mode_pass"])
+                        template.set_plain_text_content("恭喜魔鬼，你成功通关了「闯关模式」")
+                        directive = RenderTemplate(template)
+                        self.compute_ranking()
+                        return {
+                            "directives": [directive],
+                            "outputSpeech": "我的上帝，你是什么魔鬼，闯关模式都被你攻略了！可以去隔壁了"
+                        }
 
                     passed_pos.append(new_pos)
                     self.set_session_attribute("round_id", round_id + 1, 1)  # 轮加一
@@ -409,9 +421,21 @@ class GuessIdiom(Bot):
                     self.wait_answer()
                     if round_error_num + 1 > 2:
                         self.log.add_log("next round is allow now because round_error_num limit reached", 1)
-                        new_pos = random.randint(0, len(self.idiom_url_list))
-                        while new_pos in passed_pos:
+
+                        if len(passed_pos) < len(self.idiom_url_list):
                             new_pos = random.randint(0, len(self.idiom_url_list))
+                            while new_pos in passed_pos:
+                                new_pos = random.randint(0, len(self.idiom_url_list))
+                        else:
+                            template = BodyTemplate1()
+                            template.set_background_image(self.commonly_used_image_url_list["entry_mode_pass"])
+                            template.set_plain_text_content("虽然你这题错了，我也很不情愿，但不得不恭喜你成功通关了「闯关模式」")
+                            directive = RenderTemplate(template)
+                            self.compute_ranking()
+                            return {
+                                "directives": [directive],
+                                "outputSpeech": "虽然你这题错了，我也很不情愿，但不得不恭喜你这位魔鬼成功通关了「闯关模式」"
+                            }
 
                         passed_pos.append(new_pos)
                         self.set_session_attribute("round_id", round_id + 1, 0)  # 轮加一
@@ -689,6 +713,7 @@ class GuessIdiom(Bot):
                 template.set_background_image(self.commonly_used_image_url_list["entry_mode_pass"])
                 template.set_plain_text_content("恭喜魔鬼，你成功通关了「闯关模式」")
                 directive = RenderTemplate(template)
+                self.compute_ranking()
                 return {
                     "directives": [directive],
                     "outputSpeech": "我的上帝，你是什么魔鬼，闯关模式都被你攻略了！可以去隔壁了"

@@ -59,6 +59,7 @@ class GuessIdiom(Bot):
         self.log = Log()
 
         self.log.add_log("Init: New request, initializing...", 1)
+        self.log.add_log("Query: %s" % self.get_query(), 1)
         self.wait_answer()
 
         self.add_launch_handler(self.handle_welcome)
@@ -103,6 +104,7 @@ class GuessIdiom(Bot):
         6、说'反馈'来上传你遇到的问题或者建议；
         7、本技能由YYH和孙哥哥开发，度秘事业部优化图片，图片来源于网络或二次创作；
         代码地址：https://github.com/xiaoland/Guess_The_Idiom
+        说出，返回，来回到模式选择页面
         """
         card = TextCard(content)
         card.set_title("看图猜成语-简介")
@@ -110,7 +112,7 @@ class GuessIdiom(Bot):
         self.wait_answer()
         return {
             "card": card,
-            "outputSpeech": r"说出，返回，来回到模式选择页面"
+            "outputSpeech": content
         }
 
     def handle_issue(self):
@@ -210,9 +212,10 @@ class GuessIdiom(Bot):
                 "outputSpeech": "wrong token! please contact the developer"
             }
 
-    def handle_entry_mode(self):
+    def handle_entry_mode(self, continue_=False):
         """
         处理闯关模式意图
+        :param continue_: 从continue意图触发？
         :return:
         """
 
@@ -227,21 +230,24 @@ class GuessIdiom(Bot):
         # ------------- fix by sunshaolei -------
         self.log.add_log("handle_entry_mode: start", 1)
 
-        pos = random.randint(0, len(self.idiom_url_list))
+        if continue_ is False:
+            pos = random.randint(0, len(self.idiom_url_list))
 
-        self.set_session_attribute("pos", pos, None)  # 当前成语id
-        self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
-        self.set_session_attribute("round_id", 1, 1)  # 第几轮
-        self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
-        self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
-        self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
-        self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
-        self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
-        self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
-        self.set_session_attribute("passed_pos", [pos], [])
-        self.set_session_attribute("game_mode", "entry_mode", "")
-        self.set_session_attribute("can_next_checkpoint", False, False)
-        self.set_session_attribute("all_error_num", 0, 0)
+            self.set_session_attribute("pos", pos, None)  # 当前成语id
+            self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
+            self.set_session_attribute("round_id", 1, 1)  # 第几轮
+            self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
+            self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
+            self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
+            self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
+            self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
+            self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
+            self.set_session_attribute("passed_pos", [pos], [])
+            self.set_session_attribute("game_mode", "entry_mode", "")
+            self.set_session_attribute("can_next_checkpoint", False, False)
+            self.set_session_attribute("all_error_num", 0, 0)
+        else:
+            pos = int(self.get_session_attribute("pos", None))
 
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
@@ -264,29 +270,33 @@ class GuessIdiom(Bot):
             "outputSpeech": r"开始闯关模式。上官——请看题"
         }
 
-    def handle_free_mode(self):
+    def handle_free_mode(self, continue_=False):
 
         """
         处理自由模式意图
+        :param continue_: 从continue意图触发？
         :return:
         """
         self.log.add_log("handle_free_mode: start", 1)
 
-        pos = random.randint(0, len(self.idiom_url_list))
+        if continue_ is False:
+            pos = random.randint(0, len(self.idiom_url_list))
 
-        self.set_session_attribute("pos", pos, None)  # 当前成语id
-        self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
-        self.set_session_attribute("round_id", 1, 1)  # 第几轮
-        self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
-        self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
-        self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
-        self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
-        self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
-        self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
-        self.set_session_attribute("passed_pos", [pos], [])
-        self.set_session_attribute("game_mode", "free_mode", "")
-        self.set_session_attribute("can_next_checkpoint", False, False)
-        self.set_session_attribute("all_error_num", 0, 0)
+            self.set_session_attribute("pos", pos, None)  # 当前成语id
+            self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
+            self.set_session_attribute("round_id", 1, 1)  # 第几轮
+            self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
+            self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
+            self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
+            self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
+            self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
+            self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
+            self.set_session_attribute("passed_pos", [pos], [])
+            self.set_session_attribute("game_mode", "free_mode", "")
+            self.set_session_attribute("can_next_checkpoint", False, False)
+            self.set_session_attribute("all_error_num", 0, 0)
+        else:
+            pos = self.get_session_attribute("pos", None)
 
         card = ImageCard()
         card.add_item(self.idiom_url_list[pos][1])
@@ -391,7 +401,13 @@ class GuessIdiom(Bot):
         # -----fix by sunshaolei------
         self.log.add_log("answer_idiom: start handle", 1)
 
-        real_pos = int(self.get_session_attribute("pos", None))
+        try:
+            real_pos = int(self.get_session_attribute("pos", None))
+        except TypeError:
+            self.log.add_log("handle_answer: get pos fail with None", 3)
+            return {
+                "我不是很明白，可以麻烦你再说一遍吗"
+            }
         if real_pos is None:
             return {
                 "outputSpeech": "we meet an error here, please contact the developer and restart the skill"
@@ -671,16 +687,15 @@ class GuessIdiom(Bot):
         """
         self.log.add_log("handle_default: start", 1)
         game_mode = self.get_session_attribute("game_mode", "")
-        output_speech = ""
 
         self.wait_answer()
 
-        if game_mode != "" or game_mode == "more":
+        if game_mode != "" or game_mode != "more":
             text = self.get_query()
 
             if len(text) == 4:
                 return self.handle_answer()
-            elif len(text) == 0:
+            elif 0<= len(text) < 4:
                 output_speech = "不好意思，我不是很明白，可以麻烦再说一遍吗"
             else:
                 round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
@@ -757,6 +772,7 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
 
         game_mode = self.get_session_attribute("game_mode", "")
+        self.log.add_log("game_mode: %s" % game_mode, 1)
         if game_mode != "" or game_mode != "more":
             self.wait_answer()
             leave_point_info = {
@@ -791,8 +807,6 @@ class GuessIdiom(Bot):
                 "outputSpeech": "请先开始游戏，这样我才能记录你的游戏信息"
             }
 
-
-
     def handle_continue(self):
 
         """
@@ -806,6 +820,7 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
+            self.log.add_log("user_id-%s is exist" % user_id, 1)
             user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
             if user_data["leavePointInfo"] is None:
                 self.log.add_log("user_id-%s does not pause ever to record LP info" % user_id, 2)
@@ -825,8 +840,18 @@ class GuessIdiom(Bot):
                 self.set_session_attribute("game_mode", lp_info["game_mode"], "")
                 self.set_session_attribute("can_next_checkpoint", lp_info["can_next_checkpoint"], False)
                 self.set_session_attribute("all_error_num", lp_info["all_error_num"], 0)
+
+                game_mode = lp_info["game_mode"]
+                if game_mode == "entry_mode":
+                    return self.handle_entry_mode(continue_=True)
+                elif game_mode == "free_mode":
+                    return self.handle_free_mode(continue_=True)
+                elif game_mode == "entry_mode_ranking":
+                    return self.handle_entry_mode_ranking()
+                elif game_mode == "more":
+                    return self.handle_more()
         else:
-            self.log.add_log("user_id-%s is not exist" % user_id, 2)
+            self.log.add_log("user_id-%s is not exist" % user_id, 1)
             output_speech = "你还没有暂停过来存储信息呢！"
 
         return {
@@ -893,7 +918,7 @@ class GuessIdiom(Bot):
         can_next_checkpoint = self.get_session_attribute("can_next_checkpoint", False)
 
         if can_next_checkpoint:
-            self.set_session_attribute("can_next_checkpoint", False)
+            self.set_session_attribute("can_next_checkpoint", False, False)
             self.compute_ranking()
 
             checkpoint_id = self.get_session_attribute("checkpoint_id", 1)

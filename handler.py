@@ -67,9 +67,12 @@ class GuessIdiom(Bot):
         self.add_intent_handler("entry_mode", self.handle_entry_mode)
         self.add_intent_handler("free_mode", self.handle_free_mode)
         self.add_intent_handler("entry_mode_ranking", self.handle_entry_mode_ranking)
+        self.add_intent_handler("more", self.handle_more)
+        self.add_intent_handler("issue", self.handle_issue)
 
         self.add_intent_handler("answer_idiom", self.handle_answer)
 
+        self.add_intent_handler("home", self.handle_welcome)
         self.add_intent_handler("skip", self.handle_skip)
         self.add_intent_handler("tips", self.handle_tips)
         self.add_intent_handler("now_status", self.handle_now_status)
@@ -89,12 +92,15 @@ class GuessIdiom(Bot):
         处理介绍意图
         :return:
         """
+        self.log.add_log("handle_introduce: start", 1)
         content = \
         """
         闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来；
         自由模式：没有关卡，想怎么猜怎么猜；
         排行榜：目前只支持闯关模式下的排行榜，说“打开排行榜”；
-        每个成语只有3次机会猜，用完了就会视为错误
+        每个成语只有3次机会猜，用完了就会视为错误；
+        本技能由YYH和孙哥哥开发，度秘事业部优化图片，图片来源于网络或二次创作；
+        代码地址：https://github.com/xiaoland/Guess_The_Idiom
         """
         card = TextCard(content)
         card.set_title("看图猜成语-简介")
@@ -103,6 +109,31 @@ class GuessIdiom(Bot):
         return {
             "card": card,
             "outputSpeech": r"说出，返回，来回到模式选择页面"
+        }
+
+    def handle_issue(self):
+
+        """
+        处理反馈意图
+        :return:
+        """
+        self.log.add_log("handle_issue: start", 1)
+
+        text = self.get_query()
+        user_id = self.get_user_id()
+        if len(text) == 2:
+            output_speech = "请说出你要反馈的内容，像这样，我觉得这里应该这样更好"
+        else:
+            output_speech = "非常感谢您的反馈，我一定会加油改进的"
+            issue_repost = json.load(open("./data/json/issue_report.json", "r", encoding="utf-8"))
+            try:
+                issue_repost[user_id].append(text)
+            except KeyError:
+                issue_repost[user_id] = []
+                issue_repost[user_id].append(text)
+
+        return {
+            "outputSpeech": output_speech
         }
 
     def handle_welcome(self):
@@ -120,15 +151,19 @@ class GuessIdiom(Bot):
         mode1 = ListTemplateItem()
         mode2 = ListTemplateItem()
         mode3 = ListTemplateItem()
+        mode4 = ListTemplateItem()
         mode1.set_plain_primary_text("闯关模式")
         mode2.set_plain_primary_text("自由模式")
         mode3.set_plain_primary_text("排行榜")
+        mode4.set_plain_primary_text("更多")
         mode1.set_image(self.commonly_used_image_url_list["entry_mode"])
         mode2.set_image(self.commonly_used_image_url_list["free_mode"])
         mode3.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
+        mode3.set_image(self.commonly_used_image_url_list["button_more"])
         mode1.set_token("entry_mode")
         mode2.set_token("free_mode")
         mode3.set_token("entry_mode_ranking")
+        mode4.set_token("more")
         template.add_item(mode1)
         template.add_item(mode2)
         template.add_item(mode3)
@@ -158,6 +193,15 @@ class GuessIdiom(Bot):
         elif token == "entry_mode_ranking":
             self.log.add_log("entry_mode_ranking detected", 1)
             return self.handle_entry_mode_ranking()
+        elif token == "more":
+            self.log.add_log("more detected", 1)
+            return self.handle_more()
+        elif token == "issue":
+            self.log.add_log("issue detected", 1)
+            return self.handle_issue()
+        elif token == "introduce":
+            self.log.add_log("introduce detected", 1)
+            return self.handle_introduce()
         else:
             return {
                 "outputSpeech": "wrong token! please contact the developer"
@@ -248,6 +292,36 @@ class GuessIdiom(Bot):
         return {
             "card": card,
             "outputSpeech": r"开始自由模式。上官——请看题"
+        }
+
+    def handle_more(self):
+
+        """
+        处理更多
+        :return:
+        """
+        self.log.add_log("handle_more: start", 1)
+
+        self.set_session_attribute("game_mode", "more", "")
+        template = ListTemplate1()
+        template.set_background_image(self.commonly_used_image_url_list["welcome_background"])
+        template.set_token("2")
+        template.set_title("看图猜成语-更多")
+
+        info = ListTemplateItem()
+        issue = ListTemplateItem()
+        info.set_token("introduce")
+        issue.set_token("issue")
+        info.set_image(self.commonly_used_image_url_list["button_info"])
+        issue.set_image(self.commonly_used_image_url_list["button_issue"])
+        info.set_plain_primary_text("信息")
+        info.set_plain_primary_text("反馈")
+        template.add_item(info)
+        template.add_item(issue)
+        directive = RenderTemplate(template)
+
+        return {
+            "directives": [directive]
         }
 
     def handle_entry_mode_ranking(self):
@@ -378,11 +452,11 @@ class GuessIdiom(Bot):
                     if checkpoint_error_num == 0:
                         self.log.add_log("all correct in one checkpoint", 1)
                         template.set_plain_text_content(
-                            r"太棒了！竟然——全部都答对了！对我说'进入下一关'开始第%s关，退出请说'退出'" % (checkpoint_id + 1))
+                            r"太棒了！竟然——全部都答对了！对我说'进入下一关'开始第%s关，退出请说'退出'，对我说反馈即可立马反馈" % (checkpoint_id + 1))
                         directive = RenderTemplate(template)
                         return {
                             "directives": [directive],
-                            "outputSpeech": r"太棒了！竟然——全部都答对了！对我说'开始下一关'进入第%s关，退出请说'退出'" % (checkpoint_id + 1)
+                            "outputSpeech": r"太棒了！竟然——全部都答对了！对我说'开始下一关'进入第%s关，退出请说'退出'，对我说反馈即可立马反馈" % (checkpoint_id + 1)
                         }
                     else:
                         self.log.add_log("partially correct in one checkpoint", 1)
@@ -393,7 +467,7 @@ class GuessIdiom(Bot):
                         return {
                             "directives": [directive],
                             "outputSpeech": r"真棒，你答对了%s题，对我说'进入下一关'开始第" % (
-                                    round_num - checkpoint_error_num) + "%s关，退出请说：'退出'" % (checkpoint_id + 1)
+                                    round_num - checkpoint_error_num) + "%s关，退出请说：'退出'，对我说反馈即可立马反馈" % (checkpoint_id + 1)
                         }
 
                 else:
@@ -504,7 +578,7 @@ class GuessIdiom(Bot):
                         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
                         return {
-                            "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助" % (3 - round_error_num),
+                            "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助" % (2 - round_error_num),
                             "card": card
                         }
 
@@ -543,13 +617,13 @@ class GuessIdiom(Bot):
                         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
                         return {
-                            "outputSpeech": "(残念~哒呐)，还是答错了，正确答案是：%s。不过不要气馁，让我们继续吧" % real_answer,
+                            "outputSpeech": "(残念~)，还是答错了，正确答案是：%s。不过不要气馁，让我们继续吧" % real_answer,
                             "card": card
                         }
                     else:
                         self.set_session_attribute("round_error_num", round_error_num + 1, 0)
                         return {
-                            "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助" % (3 - round_error_num)
+                            "outputSpeech": r"(残念~)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助" % (2 - round_error_num)
                         }
             elif game_mode == "free_mode":
                 if round_error_num + 1 > 2:
@@ -583,7 +657,7 @@ class GuessIdiom(Bot):
                 else:
                     self.set_session_attribute("round_error_num", round_error_num + 1, 0)
                     return {
-                        "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助，实在不行了也可以说跳过" % (3 - round_error_num)
+                        "outputSpeech": r"(残念~哒呐)，还是答错了，不要气馁，你还有%s次机会。需要帮助可以说，我需要帮助，实在不行了也可以说跳过" % (2 - round_error_num)
                     }
 
     def handle_default(self):
@@ -593,23 +667,28 @@ class GuessIdiom(Bot):
         :return:
         """
         self.log.add_log("handle_default: start", 1)
-        round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
-        self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
-
-        game_mode = self.get_session_attribute("game_mode")
+        game_mode = self.get_session_attribute("game_mode", "")
+        output_speech = ""
 
         self.wait_answer()
-        if game_mode == "entry_mode" or game_mode == "free_mode" or game_mode == "entry_mode_ranking":
+
+        if game_mode != "" or game_mode == "more":
             text = self.get_query()
+
             if len(text) == 4:
                 return self.handle_answer()
-            return {
-                "outputSpeech": r"答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过，需要暂停可以说暂停，之后恢复即可"
-            }
+            elif len(text) == 0:
+                output_speech = "不好意思，我不是很明白，可以麻烦再说一遍吗"
+            else:
+                round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
+                self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
+                output_speech = "答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过，需要暂停可以说暂停，之后恢复即可"
         else:
-            return {
-                "outputSpeech": "不好意思，我不是很明白，可以麻烦再说一遍吗"
-            }
+            output_speech = "不好意思，我不是很明白，可以麻烦再说一遍吗"
+
+        return {
+            "outputSpeech": output_speech
+        }
 
     def handle_now_status(self):
 

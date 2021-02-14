@@ -34,8 +34,7 @@ import os
 from dueros.Bot import Bot
 from dueros.directive.Display.RenderTemplate import RenderTemplate
 from dueros.directive.Display.template.BodyTemplate1 import BodyTemplate1
-from dueros.directive.Display.template import ListTemplate1
-from dueros.directive.Display.template import ListTemplateItem
+from dueros.directive.Display.template import ListTemplate1, ListTemplate4, ListTemplateItem
 
 from dueros.card.ImageCard import ImageCard
 from dueros.card.TextCard import TextCard
@@ -176,7 +175,7 @@ class GuessIdiom(Bot):
         # num.close()
 
         # ------------- fix by sunshaolei -------
-        self.log.add_log("entry_mode: start handle", 1)
+        self.log.add_log("handle_entry_mode: start", 1)
 
         pos = random.randint(0, len(self.idiom_url_list))
 
@@ -194,13 +193,95 @@ class GuessIdiom(Bot):
         self.set_session_attribute("can_next_checkpoint", False, False)
         self.set_session_attribute("all_error_num", 0, 0)
 
+        user_id = self.get_user_id()
+        user_data_list = os.listdir(r"./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+        else:
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data["user_id"] = user_id
+            user_data["last_entry_mode_checkpoint_id"] = 1
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+
+        self.set_session_attribute("last_entry_mode_checkpoint_id", user_data["last_entry_mode_checkpoint_id"], 1)
+
         card = ImageCard()
         card.addItem(self.idiom_url_list[pos][1])
         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
         self.wait_answer()
         return {
             "card": card,
-            "outputSpeech": r"上官——请看题"
+            "outputSpeech": r"开始闯关模式。上官——请看题"
+        }
+
+    def handle_free_mode(self):
+
+        """
+        处理自由模式意图
+        :return:
+        """
+        self.log.add_log("handle_free_mode: start", 1)
+
+        pos = random.randint(0, len(self.idiom_url_list))
+
+        self.set_session_attribute("pos", pos, None)  # 当前成语id
+        self.set_session_attribute("checkpoint_id", 1, 1)  # 第几关
+        self.set_session_attribute("round_id", 1, 1)  # 第几轮
+        self.set_session_attribute("checkpoint_error_num", 0, 0)  # 本关错误次数
+        self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
+        self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
+        self.set_session_attribute("tips_limit", 8, 8)  # 关卡提示次数限制
+        self.set_session_attribute("error_limit", 6, 6)  # 关卡错误次数限制
+        self.set_session_attribute("round_num", 10, 5)  # 本关有多少轮
+        self.set_session_attribute("passed_pos", [pos], [])
+        self.set_session_attribute("game_mode", "free_mode", "")
+        self.set_session_attribute("can_next_checkpoint", False, False)
+        self.set_session_attribute("all_error_num", 0, 0)
+
+        card = ImageCard()
+        card.addItem(self.idiom_url_list[pos][1])
+        card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
+        self.wait_answer()
+        return {
+            "card": card,
+            "outputSpeech": r"开始自由模式。上官——请看题"
+        }
+
+    def handle_entry_mode_ranking(self):
+
+        """
+        处理闯关模式排行榜意图
+        :return:
+        """
+        self.log.add_log("handle_entry_mode_ranking: start", 1)
+
+        user_id = self.get_user_id()
+        user_data_list = os.listdir(r"./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+        else:
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data["user_id"] = user_id
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+            self.compute_ranking()
+
+        user_ranking = user_data["ranking"]
+
+        template = ListTemplate4()
+        template.set_background_image(self.commonly_used_image_url_list["ranking"])
+        template.set_title("闯关模式排行榜")
+        template.set_plain_text_content("你：第%s名" % user_ranking)
+
+        ranking_data = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
+        for index in range(1, 16):
+            item = ListTemplateItem()
+            item.set_plain_primary_text("第%s名：" % (index) + ranking_data[index-1])
+            template.add_item(item)
+
+        directive = RenderTemplate(template)
+        return {
+            "directives": [directive],
+            "outputSpeech": r"喏，你要的排名"
         }
 
     def handle_answer(self):
@@ -343,7 +424,7 @@ class GuessIdiom(Bot):
                         new_pos = random.randint(0, len(self.idiom_url_list))
                 else:
                     self.log.add_log("no more pos can be selected", 1)
-                    self.end_session()
+                    self.handle_exit()
                     return {
                         "outputSpeech": "诶呀！这么厉害，一不小心就全部被你猜完啦！我已经没有更多了，谢谢你与我一同玩了这么久，下次再来吧！"
                     }
@@ -370,7 +451,7 @@ class GuessIdiom(Bot):
                 if checkpoint_error_num + 1 > error_limit and round_error_num + 1 > 2:
                     self.log.add_log("exit entry mode because checkpoint_error_num is limit reached", 1)
                     self.clear_user_lp_info()
-                    self.end_session()
+                    self.handle_exit()
                     return {
                         "outputSpeech": "实在是太遗憾了！你已经在本关里猜错了%s次，请好好磨练自己，改日再来吧！——少年！（我好中二啊哈哈哈）"
                     }
@@ -465,7 +546,7 @@ class GuessIdiom(Bot):
                             new_pos = random.randint(0, len(self.idiom_url_list))
                     else:
                         self.log.add_log("no more pos can be selected", 1)
-                        self.end_session()
+                        self.handle_exit()
                         return {
                             "outputSpeech": "诶呀！这么厉害，一不小心就全部被你猜完啦！我已经没有更多了，谢谢你与我一同玩了这么久，下次再来吧！"
                         }
@@ -535,7 +616,7 @@ class GuessIdiom(Bot):
                 while new_pos in passed_pos:
                     new_pos = random.randint(0, len(self.idiom_url_list))
             else:
-                self.end_session()
+                self.handle_exit()
                 self.log.add_log("no more pos can be selected", 1)
                 return {
                     "outputSpeech": "诶呀！这么厉害，一不小心就全部被你猜完啦！我已经没有更多了，谢谢你与我一同玩了这么久，下次再来吧！"
@@ -746,6 +827,7 @@ class GuessIdiom(Bot):
         self.log.add_log("handle_exit: start", 1)
         game_mode = self.get_session_attribute("game_mode", "")
         if game_mode == "entry_mode":
+            self.record_user_info()
             self.compute_ranking()
         self.end_session()
         return {
@@ -758,6 +840,7 @@ class GuessIdiom(Bot):
         清空用户记录点
         :return:
         """
+        self.log.add_log("clear_user_lp_info: start", 1)
         user_id = self.get_user_id()
         self.log.add_log("clear user_id-%s's lp info" % user_id, 1)
 
@@ -766,6 +849,25 @@ class GuessIdiom(Bot):
             user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
             user_data["leavePointInfo"] = None
             json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+
+    def record_user_info(self):
+
+        """
+        记录用户信息
+        :return:
+        """
+        self.log.add_log("record_user_info: start", 1)
+
+        user_id = self.get_user_id()
+
+        user_data_list = os.listdir("./data/user_data")
+        if user_id + ".json" in user_data_list:
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+        else:
+            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
+
+        user_data["last_entry_mode_checkpoint_id"] = str(self.get_session_attribute("checkpoint_id")) + str(self.get_session_attribute("round_id"))
+        
 
 
 if __name__ == "__main__":

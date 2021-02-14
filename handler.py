@@ -757,37 +757,41 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
 
         game_mode = self.get_session_attribute("game_mode", "")
-        if game_mode ==
+        if game_mode != "" or game_mode != "more":
+            self.wait_answer()
+            leave_point_info = {
+                "game_mode": game_mode,
+                "passed_pos": self.get_session_attribute("passed_pos", []),
+                "all_error_num": self.get_session_attribute("all_error_num", 0),
+                "used_tips_num": self.get_session_attribute("used_tips_num", 0),
+                "checkpoint_id": self.get_session_attribute("checkpoint_id", 1),
+                "round_id": self.get_session_attribute("round_id", 1),
+                "error_limit": self.get_session_attribute("error_limit", 1),
+                "tips_limit": self.get_session_attribute("tips_limit", 1),
+                "round_num": self.get_session_attribute("round_num", 1),
+                "can_next_checkpoint": self.get_session_attribute("can_next_checkpoint", False),
+                "pos": self.get_session_attribute("pos", 0),
+                "round_error_num": self.get_session_attribute("round_error_num", 0),
+                "checkpoint_error_num": self.get_session_attribute("checkpoint_error_num", 0)
+            }
+            user_data_list = os.listdir(r"./data/user_data")
+            if user_id + ".json" in user_data_list:
+                user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            else:
+                user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
+                user_data["user_id"] = user_id
 
-        self.wait_answer()
-        leave_point_info = {
-            "game_mode": game_mode,
-            "passed_pos": self.get_session_attribute("passed_pos", []),
-            "all_error_num": self.get_session_attribute("all_error_num", 0),
-            "used_tips_num": self.get_session_attribute("used_tips_num", 0),
-            "checkpoint_id": self.get_session_attribute("checkpoint_id", 1),
-            "round_id": self.get_session_attribute("round_id", 1),
-            "error_limit": self.get_session_attribute("error_limit", 1),
-            "tips_limit": self.get_session_attribute("tips_limit", 1),
-            "round_num": self.get_session_attribute("round_num", 1),
-            "can_next_checkpoint": self.get_session_attribute("can_next_checkpoint", False),
-            "pos": self.get_session_attribute("pos", 0),
-            "round_error_num": self.get_session_attribute("round_error_num", 0),
-            "checkpoint_error_num": self.get_session_attribute("checkpoint_error_num", 0)
-        }
-        user_data_list = os.listdir(r"./data/user_data")
-        if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data["leavePointInfo"] = leave_point_info
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+            return {
+                "outputSpeech": "暂停完成！信息点已经记录"
+            }
         else:
-            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
-            user_data["user_id"] = user_id
+            return {
+                "outputSpeech": "请先开始游戏，这样我才能记录你的游戏信息"
+            }
 
-        user_data["leavePointInfo"] = leave_point_info
-        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w", encoding="utf-8"))
 
-        return {
-            "outputSpeech": "暂停完成！信息点已经记录"
-        }
 
     def handle_continue(self):
 

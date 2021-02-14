@@ -34,7 +34,9 @@ import os
 from dueros.Bot import Bot
 from dueros.directive.Display.RenderTemplate import RenderTemplate
 from dueros.directive.Display.template.BodyTemplate1 import BodyTemplate1
-from dueros.directive.Display.template import ListTemplate1, ListTemplate4, ListTemplateItem
+from dueros.directive.Display.template.ListTemplate1 import ListTemplate1
+from dueros.directive.Display.template.ListTemplate4 import ListTemplate4
+from dueros.directive.Display.template.ListTemplateItem import ListTemplateItem
 
 from dueros.card.ImageCard import ImageCard
 from dueros.card.TextCard import TextCard
@@ -49,9 +51,9 @@ class GuessIdiom(Bot):
         super(GuessIdiom, self).__init__(request_data)
         # fix by sunshaolei 不需要再初始化的时候就随机数，这样每次请求都会重新随机，效率低而且可能随机到重复的(code:random.randint(0:67))
 
-        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r", encoding="utf-8"))
+        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r"))#))#, encoding="utf-8"))
         self.commonly_used_image_url_list = json.load(
-            open("./data/json/commonly_used_image_url_list.json", "r", encoding="utf-8"))
+            open("./data/json/commonly_used_image_url_list.json", "r"))#))#, encoding="utf-8"))
         self.request_data = request_data
 
         self.log = Log()
@@ -88,10 +90,10 @@ class GuessIdiom(Bot):
         :return:
         """
         content = \
-            """
-        闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来
-        自由模式：没有关卡，想怎么猜怎么猜
-        排行榜：目前只支持闯关模式下的排行榜
+        """
+        闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来；
+        自由模式：没有关卡，想怎么猜怎么猜；
+        排行榜：目前只支持闯关模式下的排行榜；
         每个成语只有3次机会猜，用完了就会视为错误
         """
         card = TextCard(content)
@@ -196,12 +198,12 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
             user_data["user_id"] = user_id
             user_data["last_entry_mode_checkpoint_id"] = 1
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
 
         self.set_session_attribute("last_entry_mode_checkpoint_id", user_data["last_entry_mode_checkpoint_id"], 1)
 
@@ -258,11 +260,11 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
             user_data["user_id"] = user_id
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
             self.compute_ranking()
 
         user_ranking = user_data["ranking"]
@@ -272,7 +274,7 @@ class GuessIdiom(Bot):
         template.set_title("闯关模式排行榜")
         template.set_plain_text_content("你：第%s名" % user_ranking)
 
-        ranking_data = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
+        ranking_data = json.load(open("./data/json/ranking.json", "r"))#, encoding="utf-8"))
         for index in range(1, 16):
             item = ListTemplateItem()
             item.set_plain_primary_text("第%s名：" % (index) + ranking_data[index-1])
@@ -668,13 +670,13 @@ class GuessIdiom(Bot):
         }
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
             user_data["user_id"] = user_id
 
         user_data["leavePointInfo"] = leave_point_info
-        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w", encoding="utf-8"))
+        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w"))#, encoding="utf-8"))
 
         return {
             "outputSpeech": "暂停完成！信息点已经记录"
@@ -693,7 +695,7 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
             if user_data["leavePointInfo"] is None:
                 self.log.add_log("user_id-%s does not pause ever to record LP info" % user_id, 2)
                 output_speech = "你还没有暂停过来存储信息呢！"
@@ -846,9 +848,9 @@ class GuessIdiom(Bot):
 
         user_data_list = os.listdir("./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
             user_data["leavePointInfo"] = None
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
 
     def record_user_info(self):
 
@@ -862,15 +864,15 @@ class GuessIdiom(Bot):
 
         user_data_list = os.listdir("./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
+            user_data = json.load(open("./data/json/user_data_template.json", "r"))#, encoding="utf-8"))
 
         user_data["lastEntryModeData"]["endpoint_id"] = int(str(self.get_session_attribute("checkpoint_id")) + str(self.get_session_attribute("round_id")))
         user_data["lastEntryModeData"]["used_tips_num"] = int(self.get_session_attribute("used_tips_num"))
         user_data["lastEntryModeData"]["checkpoint_error_num"] = int(self.get_session_attribute("checkpoint_error_num"))
 
-        json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+        json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
 
     def compute_ranking(self):
 
@@ -889,7 +891,7 @@ class GuessIdiom(Bot):
             base_ranking_data = {}
             user_id_list = os.listdir("./data/user_data")
             for user_id_file in user_id_list:
-                user_data = json.load(open("./data/user_data/%s" % user_id_file, "r", encoding="utf-8"))
+                user_data = json.load(open("./data/user_data/%s" % user_id_file, "r"))#, encoding="utf-8"))
                 # raw_data.append([user_data["user_id"], user_data["lastEntryModeData"]])
                 base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
 

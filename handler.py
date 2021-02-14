@@ -857,7 +857,7 @@ class GuessIdiom(Bot):
 
             if used_tips_num <= tips_limit:
                 number = random.randint(2, 3)
-                remain_tips_num = tips_limit - (used_tips_num - 1)
+                remain_tips_num = tips_limit - (used_tips_num + 1)
                 self.set_session_attribute("used_tips_num", used_tips_num + 1, 0)
 
                 if number == 2:

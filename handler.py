@@ -866,8 +866,43 @@ class GuessIdiom(Bot):
         else:
             user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
 
-        user_data["last_entry_mode_checkpoint_id"] = str(self.get_session_attribute("checkpoint_id")) + str(self.get_session_attribute("round_id"))
-        
+        user_data["lastEntryModeData"]["endpoint_id"] = int(str(self.get_session_attribute("checkpoint_id")) + str(self.get_session_attribute("round_id")))
+        user_data["lastEntryModeData"]["used_tips_num"] = int(self.get_session_attribute("used_tips_num"))
+        user_data["lastEntryModeData"]["checkpoint_error_num"] = int(self.get_session_attribute("checkpoint_error_num"))
+
+        json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
+
+    def compute_ranking(self):
+
+        """
+        计算排名
+        :return:
+        """
+        self.log.add_log("compute_ranking: start", 1)
+
+        compute_request_count = int(open("./data/compute_ranking_request.txt", "r").read())
+        if compute_request_count >= 20:
+            self.log.add_log("compute_ranking: over 20 request time, start compute", 1)
+            open("./data/compute_ranking_request.txt", "w").write("0")
+
+            # raw_data = []
+            base_ranking_data = {}
+            user_id_list = os.listdir("./data/user_data")
+            for user_id_file in user_id_list:
+                user_data = json.load(open("./data/user_data/%s" % user_id_file, "r", encoding="utf-8"))
+                # raw_data.append([user_data["user_id"], user_data["lastEntryModeData"]])
+                base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
+
+            base_ranking_list = {}
+            base_ranking_data_index = list(base_ranking_data.keys())
+            base_ranking_data_index.sort(reverse=True)
+            for index in base_ranking_data_index:
+                base_ranking_list[index] = base_ranking_data[index]
+
+            # for user_data in raw_data:
+        else:
+            self.log.add_log("compute_ranking: less than 20, add one", 1)
+            open("./data/compute_ranking_request.txt", "w").write(str(compute_request_count+1))
 
 
 if __name__ == "__main__":

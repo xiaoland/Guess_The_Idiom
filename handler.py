@@ -318,7 +318,7 @@ class GuessIdiom(Bot):
         info.set_image(self.commonly_used_image_url_list["button_info"])
         issue.set_image(self.commonly_used_image_url_list["button_issue"])
         info.set_plain_primary_text("信息")
-        info.set_plain_primary_text("反馈")
+        issue.set_plain_primary_text("反馈")
         template.add_item(info)
         template.add_item(issue)
         directive = RenderTemplate(template)

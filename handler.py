@@ -95,11 +95,13 @@ class GuessIdiom(Bot):
         self.log.add_log("handle_introduce: start", 1)
         content = \
         """
-        闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来；
-        自由模式：没有关卡，想怎么猜怎么猜；
-        排行榜：目前只支持闯关模式下的排行榜，说“打开排行榜”；
-        每个成语只有3次机会猜，用完了就会视为错误；
-        本技能由YYH和孙哥哥开发，度秘事业部优化图片，图片来源于网络或二次创作；
+        1、闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来；
+        2、自由模式：没有关卡，想怎么猜怎么猜；
+        3、排行榜：目前只支持闯关模式下的排行榜，说“打开排行榜”且为了节省资源，只有在排行榜计算请求>20后才会计算；
+        4、每个成语只有3次机会猜，用完了就会视为错误；
+        5、说'暂停'来记录信息点，'恢复'来加载信息点；
+        6、说'反馈'来上传你遇到的问题或者建议；
+        7、本技能由YYH和孙哥哥开发，度秘事业部优化图片，图片来源于网络或二次创作；
         代码地址：https://github.com/xiaoland/Guess_The_Idiom
         """
         card = TextCard(content)
@@ -159,7 +161,7 @@ class GuessIdiom(Bot):
         mode1.set_image(self.commonly_used_image_url_list["entry_mode"])
         mode2.set_image(self.commonly_used_image_url_list["free_mode"])
         mode3.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
-        mode3.set_image(self.commonly_used_image_url_list["button_more"])
+        mode4.set_image(self.commonly_used_image_url_list["button_more"])
         mode1.set_token("entry_mode")
         mode2.set_token("free_mode")
         mode3.set_token("entry_mode_ranking")
@@ -167,6 +169,7 @@ class GuessIdiom(Bot):
         template.add_item(mode1)
         template.add_item(mode2)
         template.add_item(mode3)
+        template.add_item(mode4)
         self.wait_answer()
 
         directive = RenderTemplate(template)
@@ -753,9 +756,12 @@ class GuessIdiom(Bot):
         self.log.add_log("handle_pause: start", 1)
         user_id = self.get_user_id()
 
+        game_mode = self.get_session_attribute("game_mode", "")
+        if game_mode ==
+
         self.wait_answer()
         leave_point_info = {
-            "game_mode": self.get_session_attribute("game_mode", ""),
+            "game_mode": game_mode,
             "passed_pos": self.get_session_attribute("passed_pos", []),
             "all_error_num": self.get_session_attribute("all_error_num", 0),
             "used_tips_num": self.get_session_attribute("used_tips_num", 0),

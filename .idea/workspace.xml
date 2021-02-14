@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4ea3b78-f9d7-4d24-9d30-faa811d30dfa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/data/compute_ranking_request.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/json/user_data_template.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/json/user_data_template.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/Server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +77,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534169819098</updated>
-      <workItem from="1613196214781" duration="32917000" />
+      <workItem from="1613196214781" duration="33725000" />
     </task>
     <servers />
   </component>

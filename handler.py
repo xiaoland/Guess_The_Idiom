@@ -30,6 +30,7 @@
 import random
 import json
 import os
+import requests
 
 from dueros.Bot import Bot
 from dueros.directive.Display.RenderTemplate import RenderTemplate
@@ -80,6 +81,8 @@ class GuessIdiom(Bot):
         self.add_intent_handler("continue", self.handle_continue)
         self.add_intent_handler("pause", self.handle_pause)
         self.add_intent_handler("next_checkpoint", self.handle_next_checkpoint)
+        self.add_intent_handler("update_idiom", self.handle_update_idiom)
+        self.add_intent_handler("recovery_idiom", self.handle_recovery_idiom)
 
         self.add_intent_handler("ai.dueros.common.cancel_intent", self.handle_welcome)
         self.add_intent_handler("ai.dueros.common.stop_intent", self.handle_pause)
@@ -1044,6 +1047,42 @@ class GuessIdiom(Bot):
         else:
             self.log.add_log("compute_ranking: less than 20, add one", 1)
             open("./data/compute_ranking_request.txt", "w").write(str(compute_request_count+1))
+
+    def handle_update_idiom(self):
+
+        """
+        处理「更新成语库」意图
+        :return:
+        """
+        self.log.add_log("handle_update_idiom: start", 1)
+        url = "http://hadream.ltd:82/nextcloud/index.php/s/TKWKyMQeqB4yQ2c/download"
+        res = requests.get(url)
+        try:
+            new_idiom_list = list(res.text)
+        except:
+            return {
+                "outputSpeech": "update fail, please check your server"
+            }
+        else:
+            raw_file = json.load(open("./data/json/idiom_url_list.json", "r", encoding="utf-8"))
+            json.dump(raw_file, open("./data/json/idiom_url_list_backup.json", "w", encoding="utf-8"))
+            json.dump(new_idiom_list, open("./data/json/idiom_url_list.json", "w", encoding="utf-8"))
+            return {
+                "outputSpeech": "update success"
+            }
+
+    def handle_recovery_idiom(self):
+
+        """
+        处理「回退成语库」意图
+        :return:
+        """
+        self.log.add_log("handle_recovery_idiom: start", 1)
+        backup_file = json.load(open("./data/json/idiom_url_list_backup.json", "r", encoding="utf-8"))
+        json.dump(backup_file, open("./data/json/idiom_url_list.json", "w", encoding="utf-8"))
+        return {
+            "outputSpeech": "recovery done"
+        }
 
 
 if __name__ == "__main__":

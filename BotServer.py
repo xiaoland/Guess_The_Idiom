@@ -53,5 +53,4 @@ def application(environ, start_response):
 
 
 def callback(data):
-    print("-------------------------------------")
     print(data)

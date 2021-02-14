@@ -1,4 +1,9 @@
 {
-  "welcome_background": "http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E7%9B%AE%E4%B8%8D%E8%AF%86%E4%B8%81.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A29%3A48Z%2F-1%2F%2F454b61cd89235a7248857bb018c3927f82b94bb8ba19de6ecc7e318247f5a7b3",
-  "checkpoint_summary_background": "http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%85%A8%E5%BF%83%E6%8A%95%E5%85%A5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A00Z%2F-1%2F%2F65d7fb04d32c2d64abb134ad8be345c4bd81a32bdfe8071dc56d19da7c9de5f0"
+  "welcome_background": "http://dbp-resource.cdn.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%9F%BA%E6%9C%AC%E8%83%8C%E6%99%AF2.jpg",
+  "checkpoint_summary_background": "http://dbp-resource.gz.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E5%85%A8%E5%BF%83%E6%8A%95%E5%85%A5.jpg?authorization=bce-auth-v1%2Fa4d81bbd930c41e6857b989362415714%2F2018-06-27T05%3A30%3A00Z%2F-1%2F%2F65d7fb04d32c2d64abb134ad8be345c4bd81a32bdfe8071dc56d19da7c9de5f0",
+  "free_mode": "http://dbp-resource.cdn.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E8%87%AA%E7%94%B1%E6%A8%A1%E5%BC%8F.jpg",
+  "entry_mode": "http://dbp-resource.cdn.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E9%97%AF%E5%85%B3%E6%A8%A1%E5%BC%8F.jpg",
+  "entry_mode_ranking": "http://dbp-resource.cdn.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E6%8E%92%E8%A1%8C%E6%A6%9C.png",
+  "entry_mode_pass": "http://dbp-resource.cdn.bcebos.com/509b8811-c1d4-238d-5a0e-1f1b319a9e4b/%E9%97%AF%E8%BF%87%E6%A8%A1%E5%BC%8F%E8%BF%87%E5%85%B3.jpg",
+  "entry_mode_ranking_background": ""
 }

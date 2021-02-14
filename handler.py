@@ -51,9 +51,9 @@ class GuessIdiom(Bot):
         super(GuessIdiom, self).__init__(request_data)
         # fix by sunshaolei 不需要再初始化的时候就随机数，这样每次请求都会重新随机，效率低而且可能随机到重复的(code:random.randint(0:67))
 
-        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r"))#))#, encoding="utf-8"))
+        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r"))#, encoding="utf-8"))
         self.commonly_used_image_url_list = json.load(
-            open("./data/json/commonly_used_image_url_list.json", "r"))#))#, encoding="utf-8"))
+            open("./data/json/commonly_used_image_url_list.json", "r"))#, encoding="utf-8"))
         self.request_data = request_data
 
         self.log = Log()
@@ -93,7 +93,7 @@ class GuessIdiom(Bot):
         """
         闯关模式：设置了关卡，难度递增（不是成语难度，是条件难度），每关错误次数达到一定值就会要求全部重来；
         自由模式：没有关卡，想怎么猜怎么猜；
-        排行榜：目前只支持闯关模式下的排行榜；
+        排行榜：目前只支持闯关模式下的排行榜，说“打开排行榜”；
         每个成语只有3次机会猜，用完了就会视为错误
         """
         card = TextCard(content)
@@ -122,16 +122,17 @@ class GuessIdiom(Bot):
         mode3 = ListTemplateItem()
         mode1.set_plain_primary_text("闯关模式")
         mode2.set_plain_primary_text("自由模式")
-        mode3.set_plain_primary_text("闯关排行榜")
+        mode3.set_plain_primary_text("排行榜")
         mode1.set_image(self.commonly_used_image_url_list["entry_mode"])
-        mode1.set_image(self.commonly_used_image_url_list["free_mode"])
-        mode1.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
+        mode2.set_image(self.commonly_used_image_url_list["free_mode"])
+        mode3.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
         mode1.set_token("entry_mode")
         mode2.set_token("free_mode")
         mode3.set_token("entry_mode_ranking")
         template.add_item(mode1)
         template.add_item(mode2)
         template.add_item(mode3)
+        self.wait_answer()
 
         directive = RenderTemplate(template)
         return {
@@ -150,13 +151,13 @@ class GuessIdiom(Bot):
         token = request_data["token"]
         if token == "entry_mode":
             self.log.add_log("entry mode detected", 1)
-            self.handle_entry_mode()
+            return self.handle_entry_mode()
         elif token == "free_mode":
             self.log.add_log("free mode detected", 1)
-            self.handle_free_mode()
+            return self.handle_free_mode()
         elif token == "entry_mode_ranking":
             self.log.add_log("entry_mode_ranking detected", 1)
-            self.handle_entry_mode_ranking()
+            return self.handle_entry_mode_ranking()
         else:
             return {
                 "outputSpeech": "wrong token! please contact the developer"
@@ -198,17 +199,17 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
             user_data["user_id"] = user_id
             user_data["last_entry_mode_checkpoint_id"] = 1
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
 
-        self.set_session_attribute("last_entry_mode_checkpoint_id", user_data["last_entry_mode_checkpoint_id"], 1)
+        self.set_session_attribute("last_entry_mode_endpoint_id", user_data["lastEntryModeData"]["endpoint_id"], 1)
 
         card = ImageCard()
-        card.addItem(self.idiom_url_list[pos][1])
+        card.add_item(self.idiom_url_list[pos][1])
         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
         self.wait_answer()
         return {
@@ -241,7 +242,7 @@ class GuessIdiom(Bot):
         self.set_session_attribute("all_error_num", 0, 0)
 
         card = ImageCard()
-        card.addItem(self.idiom_url_list[pos][1])
+        card.add_item(self.idiom_url_list[pos][1])
         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
         self.wait_answer()
         return {
@@ -260,25 +261,33 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
             user_data["user_id"] = user_id
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
             self.compute_ranking()
 
         user_ranking = user_data["ranking"]
 
         template = ListTemplate4()
-        template.set_background_image(self.commonly_used_image_url_list["ranking"])
+        # template.set_background_image(self.commonly_used_image_url_list["entry_mode_ranking_background"])
         template.set_title("闯关模式排行榜")
         template.set_plain_text_content("你：第%s名" % user_ranking)
 
-        ranking_data = json.load(open("./data/json/ranking.json", "r"))#, encoding="utf-8"))
+        ranking_data = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
         for index in range(1, 16):
             item = ListTemplateItem()
-            item.set_plain_primary_text("第%s名：" % (index) + ranking_data[index-1])
+            try:
+                item.set_plain_primary_text("第%s名：" % (index) + ranking_data[index-1])
+            except KeyError:
+                self.compute_ranking()
+                return {
+                    "outputSpeech": "请等待排行榜进行计算"
+                }
             template.add_item(item)
+            
+        
 
         directive = RenderTemplate(template)
         return {
@@ -286,7 +295,7 @@ class GuessIdiom(Bot):
             "outputSpeech": r"喏，你要的排名"
         }
 
-    def handle_answer(self):
+    def handle_answer(self, user_answer=None):
 
         """
         处理回答成语意图
@@ -322,15 +331,16 @@ class GuessIdiom(Bot):
         game_mode = self.get_session_attribute("game_mode", "")
         all_error_num = self.get_session_attribute("all_error_num", 0)
 
-        result = self.get_slots("idiom")
-        try:
-            user_answer = json.loads(result).get("origin")
-        except:
-            user_answer = result
+        if user_answer is None:
+            result = self.get_slots("idiom")
+            try:
+                user_answer = json.loads(result).get("origin")
+            except:
+                user_answer = result
         real_answer = self.idiom_url_list[real_pos][0]
 
-        print("user_answer", repr(user_answer))
-        print("real_answer", repr(real_answer))
+        print("user_answer", user_answer)
+        print("real_answer", real_answer)
 
         if not user_answer:
             self.log.add_log("answer is none, ask", 1)
@@ -339,7 +349,7 @@ class GuessIdiom(Bot):
             return {
                 "outputSpeech": r"我好像没有理解你的回答，麻烦您再说一遍"
             }
-        if user_answer == real_answer:
+        if real_answer in user_answer or user_answer == real_answer:
             # 正确分支
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
             self.log.add_log("answer is correct", 1)
@@ -394,13 +404,14 @@ class GuessIdiom(Bot):
                         while new_pos in passed_pos:
                             new_pos = random.randint(0, len(self.idiom_url_list))
                     else:
-                        template = BodyTemplate1()
-                        template.set_background_image(self.commonly_used_image_url_list["entry_mode_pass"])
-                        template.set_plain_text_content("恭喜魔鬼，你成功通关了「闯关模式」")
-                        directive = RenderTemplate(template)
+                        template = ImageCard() # BodyTemplate1()
+                        template.add_item(self.commonly_used_image_url_list["entry_mode_pass"])
+                        # template.set_plain_text_content("恭喜魔鬼，你成功通关了「闯关模式」")
+                        # directive = RenderTemplate(template)
                         self.compute_ranking()
                         return {
-                            "directives": [directive],
+                            # "directives": [directive],
+                            "card": template,
                             "outputSpeech": "我的上帝，你是什么魔鬼，闯关模式都被你攻略了！可以去隔壁了"
                         }
 
@@ -489,7 +500,7 @@ class GuessIdiom(Bot):
                         self.set_session_attribute("round_error_num", round_error_num + 1, 0)
                         self.set_session_attribute("passed_pos", passed_pos, [])
                         card = ImageCard()
-                        card.addItem(self.idiom_url_list[real_pos][1])
+                        card.add_item(self.idiom_url_list[real_pos][1])
                         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
                         return {
@@ -528,7 +539,7 @@ class GuessIdiom(Bot):
                         self.set_session_attribute("checkpoint_error_num", checkpoint_error_num + 1, 0)
 
                         card = ImageCard()
-                        card.addItem(self.idiom_url_list[new_pos][1])
+                        card.add_item(self.idiom_url_list[new_pos][1])
                         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
                         return {
@@ -562,7 +573,7 @@ class GuessIdiom(Bot):
                     self.set_session_attribute("all_error_num", all_error_num + 1, 0)
 
                     card = ImageCard()
-                    card.addItem(self.idiom_url_list[new_pos][1])
+                    card.add_item(self.idiom_url_list[new_pos][1])
                     card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
                     return {
@@ -581,14 +592,24 @@ class GuessIdiom(Bot):
         处理缺省意图
         :return:
         """
-
+        self.log.add_log("handle_default: start", 1)
         round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
         self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
 
+        game_mode = self.get_session_attribute("game_mode")
+
         self.wait_answer()
-        return {
-            "outputSpeech": r"答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过"
-        }
+        if game_mode == "entry_mode" or game_mode == "free_mode" or game_mode == "entry_mode_ranking":
+            text = self.get_query()
+            if len(text) == 4:
+                return self.handle_answer()
+            return {
+                "outputSpeech": r"答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过，需要暂停可以说暂停，之后恢复即可"
+            }
+        else:
+            return {
+                "outputSpeech": "不好意思，我不是很明白，可以麻烦再说一遍吗"
+            }
 
     def handle_now_status(self):
 
@@ -631,7 +652,7 @@ class GuessIdiom(Bot):
             self.set_session_attribute("passed_pos", passed_pos, [])
 
             card = ImageCard()
-            card.addItem(self.idiom_url_list[new_pos][1])
+            card.add_item(self.idiom_url_list[new_pos][1])
             card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
 
             self.wait_answer()
@@ -666,17 +687,18 @@ class GuessIdiom(Bot):
             "round_num": self.get_session_attribute("round_num", 1),
             "can_next_checkpoint": self.get_session_attribute("can_next_checkpoint", False),
             "pos": self.get_session_attribute("pos", 0),
-            "round_error_num": self.get_session_attribute("round_error_num", 0)
+            "round_error_num": self.get_session_attribute("round_error_num", 0),
+            "checkpoint_error_num": self.get_session_attribute("checkpoint_error_num", 0)
         }
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/user_data/user_data_template.json", "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
             user_data["user_id"] = user_id
 
         user_data["leavePointInfo"] = leave_point_info
-        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w"))#, encoding="utf-8"))
+        json.dump(user_data, open("./data/user_data/%s.json"%user_id, "w", encoding="utf-8"))
 
         return {
             "outputSpeech": "暂停完成！信息点已经记录"
@@ -695,7 +717,7 @@ class GuessIdiom(Bot):
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
             if user_data["leavePointInfo"] is None:
                 self.log.add_log("user_id-%s does not pause ever to record LP info" % user_id, 2)
                 output_speech = "你还没有暂停过来存储信息呢！"
@@ -756,7 +778,7 @@ class GuessIdiom(Bot):
 
             if used_tips_num <= tips_limit:
                 number = random.randint(2, 3)
-                remain_tips_num = tips_limit - used_tips_num
+                remain_tips_num = tips_limit - (used_tips_num - 1)
                 self.set_session_attribute("used_tips_num", used_tips_num + 1, 0)
 
                 if number == 2:
@@ -782,6 +804,7 @@ class GuessIdiom(Bot):
         can_next_checkpoint = self.get_session_attribute("can_next_checkpoint", False)
 
         if can_next_checkpoint:
+            self.set_session_attribute("can_next_checkpoint", False)
             self.compute_ranking()
 
             checkpoint_id = self.get_session_attribute("checkpoint_id", 1)
@@ -833,7 +856,7 @@ class GuessIdiom(Bot):
             self.compute_ranking()
         self.end_session()
         return {
-            "outputSpeech": "好的呢，小的告退——，即便如此，您仍可以说继续游戏来加载上次记录的信息点"
+            "outputSpeech": "好的呢，小的告退——，即便如此，您仍可以说，继续游戏来加载上次记录的信息点"
         }
 
     def clear_user_lp_info(self):
@@ -848,9 +871,9 @@ class GuessIdiom(Bot):
 
         user_data_list = os.listdir("./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
             user_data["leavePointInfo"] = None
-            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
+            json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
 
     def record_user_info(self):
 
@@ -864,15 +887,15 @@ class GuessIdiom(Bot):
 
         user_data_list = os.listdir("./data/user_data")
         if user_id + ".json" in user_data_list:
-            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
         else:
-            user_data = json.load(open("./data/json/user_data_template.json", "r"))#, encoding="utf-8"))
+            user_data = json.load(open("./data/json/user_data_template.json", "r", encoding="utf-8"))
 
         user_data["lastEntryModeData"]["endpoint_id"] = int(str(self.get_session_attribute("checkpoint_id")) + str(self.get_session_attribute("round_id")))
         user_data["lastEntryModeData"]["used_tips_num"] = int(self.get_session_attribute("used_tips_num"))
         user_data["lastEntryModeData"]["checkpoint_error_num"] = int(self.get_session_attribute("checkpoint_error_num"))
 
-        json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w"))#, encoding="utf-8"))
+        json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
 
     def compute_ranking(self):
 
@@ -891,15 +914,17 @@ class GuessIdiom(Bot):
             base_ranking_data = {}
             user_id_list = os.listdir("./data/user_data")
             for user_id_file in user_id_list:
-                user_data = json.load(open("./data/user_data/%s" % user_id_file, "r"))#, encoding="utf-8"))
+                user_data = json.load(open("./data/user_data/%s" % user_id_file, "r", encoding="utf-8"))
                 # raw_data.append([user_data["user_id"], user_data["lastEntryModeData"]])
                 base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
 
-            base_ranking_list = {}
+            base_ranking_list = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
             base_ranking_data_index = list(base_ranking_data.keys())
             base_ranking_data_index.sort(reverse=True)
             for index in base_ranking_data_index:
                 base_ranking_list[index] = base_ranking_data[index]
+                
+            json.dump(base_ranking_list, open("./data/json/ranking.json", "w", encoding="utf-8"))
 
             # for user_data in raw_data:
         else:

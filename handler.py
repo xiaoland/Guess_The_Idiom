@@ -52,9 +52,9 @@ class GuessIdiom(Bot):
         super(GuessIdiom, self).__init__(request_data)
         # fix by sunshaolei 不需要再初始化的时候就随机数，这样每次请求都会重新随机，效率低而且可能随机到重复的(code:random.randint(0:67))
 
-        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r"))#, encoding="utf-8"))
+        self.idiom_url_list = json.load(open("./data/json/idiom_url_list.json", "r", encoding="utf-8"))
         self.commonly_used_image_url_list = json.load(
-            open("./data/json/commonly_used_image_url_list.json", "r"))#, encoding="utf-8"))
+            open("./data/json/commonly_used_image_url_list.json", "r", encoding="utf-8"))
         self.request_data = request_data
 
         self.log = Log()
@@ -266,6 +266,7 @@ class GuessIdiom(Bot):
         self.set_session_attribute("last_entry_mode_endpoint_id", user_data["lastEntryModeData"]["endpoint_id"], 1)
 
         card = ImageCard()
+        print("pos", str(pos), "len idiom list", str(len(self.idiom_url_list)))
         card.add_item(self.idiom_url_list[pos][1])
         card.add_cue_words(["我觉得答案是...", "（你的成语答案）", "我需要帮助/我不知道答案"])
         self.wait_answer()
@@ -300,7 +301,7 @@ class GuessIdiom(Bot):
             self.set_session_attribute("can_next_checkpoint", False, False)
             self.set_session_attribute("all_error_num", 0, 0)
         else:
-            pos = self.get_session_attribute("pos", None)
+            pos = int(self.get_session_attribute("pos", None))
 
         card = ImageCard()
         card.add_item(self.idiom_url_list[pos][1])
@@ -417,6 +418,7 @@ class GuessIdiom(Bot):
                 "outputSpeech": "we meet an error here, please contact the developer and restart the skill"
             }
 
+        text = self.get_query()
         checkpoint_id = int(self.get_session_attribute("checkpoint_id", 1))
         round_id = int(self.get_session_attribute("round_id", 1))
         round_error_num = int(self.get_session_attribute("round_error_num", 0))
@@ -440,12 +442,18 @@ class GuessIdiom(Bot):
         print("real_answer", real_answer)
 
         if not user_answer:
-            self.log.add_log("answer is none, ask", 1)
-            self.ask("idiom")
-            self.wait_answer()
-            return {
-                "outputSpeech": r"我好像没有理解你的回答，麻烦您再说一遍"
-            }
+            if len(text) == 4:
+                user_answer = text
+            elif "答案" in text:
+                user_answer = text[-4:]
+            else:
+                self.log.add_log("answer is none, ask", 1)
+                self.ask("idiom")
+                self.wait_answer()
+                return {
+                    "outputSpeech": r"我好像没有理解你的回答，麻烦您再说一遍"
+                }
+
         if real_answer in user_answer or user_answer == real_answer:
             # 正确分支
             # ------fix by susnhaolei ----- 因为没有注释，没太看明白代码这几个字段表示的意思，我理解应该是成功之后记录成功次数吗？（emm，这是关卡与轮数的更新）
@@ -697,14 +705,15 @@ class GuessIdiom(Bot):
         if game_mode != "" or game_mode != "more":
             text = self.get_query()
 
-            if len(text) == 4:
+            if len(text) >= 4:
                 return self.handle_answer()
             elif 0<= len(text) < 4:
                 output_speech = "不好意思，我不是很明白，可以麻烦再说一遍吗"
             else:
-                round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
-                self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
-                output_speech = "答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过，需要暂停可以说暂停，之后恢复即可"
+                output_speech = "不好意思，我没有理解，可以麻烦你换一种说法吗"
+                # round_error_num = int(self.get_session_attribute("round_error_num", 0))  # 获取错误次数
+                # self.set_session_attribute("round_error_num", round_error_num + 1, 0)  # 增加错误次数
+                # output_speech = "答错了哦，再努力想想吧，需要帮助可以说，我需要帮助，实在不行了也可以说跳过，需要暂停可以说暂停，之后恢复即可"
         else:
             output_speech = "不好意思，我不是很明白，可以麻烦再说一遍吗"
 

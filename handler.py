@@ -128,7 +128,7 @@ class GuessIdiom(Bot):
 
         text = self.get_query()
         user_id = self.get_user_id()
-        if len(text) == 2:
+        if len(text) == 2 or "我要" in text:
             output_speech = "请说出你要反馈的内容，像这样，我觉得这里应该这样更好"
         else:
             output_speech = "非常感谢您的反馈，我一定会加油改进的"
@@ -138,6 +138,7 @@ class GuessIdiom(Bot):
             except KeyError:
                 issue_repost[user_id] = []
                 issue_repost[user_id].append(text)
+            json.dump(issue_repost, open("./data/json/issue_report.json", "w", encoding="utf-8"))
 
         return {
             "outputSpeech": output_speech

@@ -378,9 +378,7 @@ class GuessIdiom(Bot):
                     "outputSpeech": "请等待排行榜进行计算"
                 }
             template.add_item(item)
-            
-        
-
+        self.set_session_attribute("game_mode", "entry_mode_ranking", "")
         directive = RenderTemplate(template)
         return {
             "directives": [directive],
@@ -438,9 +436,6 @@ class GuessIdiom(Bot):
                 user_answer = result
         real_answer = self.idiom_url_list[real_pos][0]
 
-        print("user_answer", user_answer)
-        print("real_answer", real_answer)
-
         if not user_answer:
             if len(text) == 4:
                 user_answer = text
@@ -453,6 +448,9 @@ class GuessIdiom(Bot):
                 return {
                     "outputSpeech": r"我好像没有理解你的回答，麻烦您再说一遍"
                 }
+
+        self.log.add_log("user_answer: %s" % user_answer, 1)
+        self.log.add_log("real_answer: %s" % real_answer, 1)
 
         if real_answer in user_answer or user_answer == real_answer:
             # 正确分支
@@ -468,7 +466,7 @@ class GuessIdiom(Bot):
                     self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
                     self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
                     self.set_session_attribute("round_num", 5, 5)  # 本关有多少轮
-                    self.set_session_attribute("passed_pos", [], [])
+                    # self.set_session_attribute("passed_pos", [], [])
                     self.set_session_attribute("can_next_checkpoint", True, False)
                     new_tips_limit = 8 - checkpoint_id
                     self.set_session_attribute("tips_limit", new_tips_limit, 3)  # 关卡提示次数限制
@@ -581,7 +579,7 @@ class GuessIdiom(Bot):
                     self.set_session_attribute("round_error_num", 0, 0)  # 本轮错误次数
                     self.set_session_attribute("used_tips_num", 0, 0)  # 本关使用的提示数
                     self.set_session_attribute("round_num", 5, 5)  # 本关有多少轮
-                    self.set_session_attribute("passed_pos", [], [])
+                    # self.set_session_attribute("passed_pos", [], [])
                     self.set_session_attribute("can_next_checkpoint", True, False)
 
                     template = BodyTemplate1()
@@ -855,6 +853,7 @@ class GuessIdiom(Bot):
                 self.set_session_attribute("all_error_num", lp_info["all_error_num"], 0)
 
                 game_mode = lp_info["game_mode"]
+                self.log.add_log("load lp's info complete, game_mode:%s" % game_mode, 1)
                 if game_mode == "entry_mode":
                     return self.handle_entry_mode(continue_=True)
                 elif game_mode == "free_mode":

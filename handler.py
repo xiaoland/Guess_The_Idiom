@@ -1042,7 +1042,11 @@ class GuessIdiom(Bot):
             for user_id_file in user_id_list:
                 user_data = json.load(open("./data/user_data/%s" % user_id_file, "r", encoding="utf-8"))
                 # raw_data.append([user_data["user_id"], user_data["lastEntryModeData"]])
-                base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
+                try:
+                    base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
+                except ValueError:
+                    self.log.add_log("compute_ranking: user-%s still not start entry mode yet. skip" % user_data["user_id"], 2)
+                    continue
 
             base_ranking_list = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
             base_ranking_data_index = list(base_ranking_data.keys())

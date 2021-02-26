@@ -2,9 +2,9 @@
   "user_id": "",
   "leavePointInfo": null,
   "lastEntryModeData": {
-    "endpoint_id": "",
-    "used_tips_num": "",
-    "checkpoint_error_num": ""
+    "endpoint_id": 0,
+    "used_tips_num": 0,
+    "checkpoint_error_num": 0
   },
   "ranking": ""
 }

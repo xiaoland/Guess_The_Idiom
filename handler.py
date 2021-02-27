@@ -160,22 +160,27 @@ class GuessIdiom(Bot):
         mode2 = ListTemplateItem()
         mode3 = ListTemplateItem()
         mode4 = ListTemplateItem()
+        # mode5 = ListTemplateItem()
         mode1.set_plain_primary_text("闯关模式")
         mode2.set_plain_primary_text("自由模式")
         mode3.set_plain_primary_text("排行榜")
         mode4.set_plain_primary_text("更多")
+        # mode5.set_plain_primary_text("捐助")
         mode1.set_image(self.commonly_used_image_url_list["entry_mode"])
         mode2.set_image(self.commonly_used_image_url_list["free_mode"])
         mode3.set_image(self.commonly_used_image_url_list["entry_mode_ranking"])
         mode4.set_image(self.commonly_used_image_url_list["button_more"])
+        # mode5.set_image(self.commonly_used_image_url_list["donate"])
         mode1.set_token("entry_mode")
         mode2.set_token("free_mode")
         mode3.set_token("entry_mode_ranking")
         mode4.set_token("more")
+        # mode5.set_token("donate")
         template.add_item(mode1)
         template.add_item(mode2)
         template.add_item(mode3)
         template.add_item(mode4)
+        # template.add_item(mode5)
         self.wait_answer()
 
         directive = RenderTemplate(template)
@@ -211,6 +216,9 @@ class GuessIdiom(Bot):
         elif token == "introduce":
             self.log.add_log("introduce detected", 1)
             return self.handle_introduce()
+        # elif token == "donate":
+        #     self.log.add_log("donate detected", 1)
+        #     return self.handle_donate()
         else:
             return {
                 "outputSpeech": "wrong token! please contact the developer"
@@ -365,18 +373,26 @@ class GuessIdiom(Bot):
         template = ListTemplate4()
         # template.set_background_image(self.commonly_used_image_url_list["entry_mode_ranking_background"])
         template.set_title("闯关模式排行榜")
-        template.set_plain_text_content("你：第%s名" % user_ranking)
 
         ranking_data = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
+        if ranking_data == {}:
+            return {
+                "outputSpeech": "请等待排行榜进行计算"
+            }
+        item = ListTemplateItem()
+        item.set_plain_primary_text("你：第%s名" % user_ranking)
+        template.add_item(item)
         for index in range(1, 16):
             item = ListTemplateItem()
             try:
-                item.set_plain_primary_text("第%s名：" % (index) + ranking_data[index-1])
+                item.set_plain_primary_text(ranking_data[index-1][1] + "第" + str(index) + "名：%s" % ranking_data[index-1][0])
             except KeyError:
                 self.compute_ranking()
                 return {
                     "outputSpeech": "请等待排行榜进行计算"
                 }
+            except IndexError:
+                break
             template.add_item(item)
         self.set_session_attribute("game_mode", "entry_mode_ranking", "")
         directive = RenderTemplate(template)
@@ -1033,30 +1049,40 @@ class GuessIdiom(Bot):
 
         compute_request_count = int(open("./data/compute_ranking_request.txt", "r").read())
         if compute_request_count >= 20:
+
             self.log.add_log("compute_ranking: over 20 request time, start compute", 1)
             open("./data/compute_ranking_request.txt", "w").write("0")
 
-            # raw_data = []
-            base_ranking_data = {}
+            evidences_list = {}
+
+            # evidences_list = {endpoint_id: [user_id, user_id]}
             user_id_list = os.listdir("./data/user_data")
             for user_id_file in user_id_list:
+                print("USER_ID_FILE_NAME: %s" % user_id_file)
                 user_data = json.load(open("./data/user_data/%s" % user_id_file, "r", encoding="utf-8"))
-                # raw_data.append([user_data["user_id"], user_data["lastEntryModeData"]])
                 try:
-                    base_ranking_data[int(user_data["lastEntryModeData"]["endpoint_id"])] = user_data["user_id"]
+                    if type(evidences_list[int(user_data["lastEntryModeData"]["endpoint_id"])]) == list:
+                        evidences_list[int(user_data["lastEntryModeData"]["endpoint_id"])][1].append(user_data["user_id"])
+                    else:
+                        evidences_list[int(user_data["lastEntryModeData"]["endpoint_id"])] = [user_data["user_id"]]
                 except ValueError:
                     self.log.add_log("compute_ranking: user-%s still not start entry mode yet. skip" % user_data["user_id"], 2)
                     continue
+                except KeyError:
+                    evidences_list[int(user_data["lastEntryModeData"]["endpoint_id"])] = [int(user_data["lastEntryModeData"]["endpoint_id"]), [user_data["user_id"]]]
 
-            base_ranking_list = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
-            base_ranking_data_index = list(base_ranking_data.keys())
-            base_ranking_data_index.sort(reverse=True)
-            for index in base_ranking_data_index:
-                base_ranking_list[index] = base_ranking_data[index]
-                
-            json.dump(base_ranking_list, open("./data/json/ranking.json", "w", encoding="utf-8"))
+            ranking_result = []
+            evidences_list_sorted = sorted(list(evidences_list.keys()))
+            for index in evidences_list_sorted:
+                user_list = evidences_list[index][1]
+                for user_id in user_list:
+                    print("RANKING_COMPUTING_USER: %s" % user_id)
+                    ranking_result.append((index, user_id))
+                    user_data = json.load(open("./data/user_data/%s.json" % user_id, "r", encoding="utf-8"))
+                    user_data["ranking"] = str(evidences_list_sorted.index(index))
+                    json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
 
-            # for user_data in raw_data:
+            json.dump(ranking_result, open("./data/json/ranking.json", "w", encoding="utf-8"))
         else:
             self.log.add_log("compute_ranking: less than 20, add one", 1)
             open("./data/compute_ranking_request.txt", "w").write(str(compute_request_count+1))

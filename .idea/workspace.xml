@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a4ea3b78-f9d7-4d24-9d30-faa811d30dfa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/json/commonly_used_image_url_list.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/json/commonly_used_image_url_list.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/json/idiom_url_list.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/json/idiom_url_list.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,7 +38,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PythonAlgorithmsPackage" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../NothingLeft-HttpSdk" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -85,7 +87,8 @@
       <option name="presentableId" value="Default" />
       <updated>1534169819098</updated>
       <workItem from="1613196214781" duration="70644000" />
-      <workItem from="1614342076746" duration="11424000" />
+      <workItem from="1614342076746" duration="13944000" />
+      <workItem from="1614441897691" duration="1166000" />
     </task>
     <servers />
   </component>
@@ -105,10 +108,10 @@
       <screen x="1920" y="-811" width="1080" height="1880" />
     </state>
     <state x="1920" y="-214" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1613408843953" />
-    <state x="2240" y="-114" key="FileChooserDialogImpl" timestamp="1614356568013">
+    <state x="2240" y="-114" key="FileChooserDialogImpl" timestamp="1614441903410">
       <screen x="1920" y="-811" width="1080" height="1880" />
     </state>
-    <state x="2240" y="-114" key="FileChooserDialogImpl/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1614356568013" />
+    <state x="2240" y="-114" key="FileChooserDialogImpl/0.40.1536.824/1920.-811.1080.1880@1920.-811.1080.1880" timestamp="1614441903410" />
     <state width="1037" height="484" key="GridCell.Tab.0.bottom" timestamp="1613408915929">
       <screen x="1920" y="-811" width="1080" height="1880" />
     </state>

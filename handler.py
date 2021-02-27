@@ -368,7 +368,7 @@ class GuessIdiom(Bot):
             json.dump(user_data, open("./data/user_data/%s.json" % user_id, "w", encoding="utf-8"))
             self.compute_ranking()
 
-        user_ranking = user_data["ranking"]
+        # user_ranking = user_data["ranking"]
 
         template = ListTemplate4()
         # template.set_background_image(self.commonly_used_image_url_list["entry_mode_ranking_background"])
@@ -379,21 +379,27 @@ class GuessIdiom(Bot):
             return {
                 "outputSpeech": "请等待排行榜进行计算"
             }
-        item = ListTemplateItem()
-        item.set_plain_primary_text("你：第%s名" % user_ranking)
-        template.add_item(item)
-        for index in range(1, 16):
-            item = ListTemplateItem()
-            try:
-                item.set_plain_primary_text(ranking_data[index-1][1] + "第" + str(index) + "名：%s" % ranking_data[index-1][0])
-            except KeyError:
-                self.compute_ranking()
-                return {
-                    "outputSpeech": "请等待排行榜进行计算"
-                }
-            except IndexError:
+        user_ranking = "!你还没有排名，你可能没有游玩闯关模式，快去试试吧!"
+        for i in ranking_data:
+            if i[-1] == user_id:
+                user_ranking = int(ranking_data.index(i) - len(ranking_data) + 2)
                 break
-            template.add_item(item)
+        item = ListTemplateItem()
+        item.set_plain_primary_text("你：第 %s 名" % user_ranking)
+        item.set_image(self.commonly_used_image_url_list["great"])
+        template.add_item(item)
+        # for index in range(1, 16):
+        #     item = ListTemplateItem()
+        #     try:
+        #         item.set_plain_primary_text(ranking_data[index-1][1] + "第" + str(index) + "名：%s" % ranking_data[index-1][0])
+        #     except KeyError:
+        #         self.compute_ranking()
+        #         return {
+        #             "outputSpeech": "请等待排行榜进行计算"
+        #         }
+        #     except IndexError:
+        #         break
+        #     template.add_item(item)
         self.set_session_attribute("game_mode", "entry_mode_ranking", "")
         directive = RenderTemplate(template)
         return {
@@ -1048,7 +1054,7 @@ class GuessIdiom(Bot):
         self.log.add_log("compute_ranking: start", 1)
 
         compute_request_count = int(open("./data/compute_ranking_request.txt", "r").read())
-        if compute_request_count >= 20:
+        if compute_request_count >= 10:
 
             self.log.add_log("compute_ranking: over 20 request time, start compute", 1)
             open("./data/compute_ranking_request.txt", "w").write("0")

@@ -358,6 +358,7 @@ class GuessIdiom(Bot):
         """
         self.log.add_log("handle_entry_mode_ranking: start", 1)
 
+        self.compute_ranking()
         user_id = self.get_user_id()
         user_data_list = os.listdir(r"./data/user_data")
         if user_id + ".json" in user_data_list:
@@ -376,16 +377,23 @@ class GuessIdiom(Bot):
 
         ranking_data = json.load(open("./data/json/ranking.json", "r", encoding="utf-8"))
         if ranking_data == {}:
+            self.compute_ranking()
             return {
                 "outputSpeech": "请等待排行榜进行计算"
             }
-        user_ranking = "!你还没有排名，你可能没有游玩闯关模式，快去试试吧!"
+        user_ranking = None
         for i in ranking_data:
             if i[-1] == user_id:
                 user_ranking = int(ranking_data.index(i) - len(ranking_data) + 2)
                 break
+        if user_ranking is None:
+            user_ranking = "!你还没有排名，你可能没有游玩闯关模式，快去试试吧!"
+            self.compute_ranking()
+        self.log.add_log("ranking is %s" % user_ranking, 1)
+
         item = ListTemplateItem()
         item.set_plain_primary_text("你：第 %s 名" % user_ranking)
+        item.set_token("xxx")
         item.set_image(self.commonly_used_image_url_list["great"])
         template.add_item(item)
         # for index in range(1, 16):
